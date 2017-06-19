@@ -30,12 +30,12 @@ $raised_by='';
     }
 ?>
 <div id="wpsp_changeraisedby"> 
-<h3><?php echo '['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive')?> <?php echo $advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.'] '.stripcslashes(htmlspecialchars_decode($ticket->subject,ENT_QUOTES));?></h3><br>
-<span class="label label-info wpsp_title_label"><?php _e('Raised By','wp-support-plus-responsive');?></span><br><br>
+<h3><?php echo '['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system')?> <?php echo $advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.'] '.stripcslashes(htmlspecialchars_decode($ticket->subject,ENT_QUOTES));?></h3><br>
+<span class="label label-info wpsp_title_label"><?php _e('Raised By','wp-support-plus-responsive-ticket-system');?></span><br><br>
 
 <select id="assignTicketRaisedById" onchange="wpsp_change_user();" name="assignTicketRaisedByIdFront">
-       <option value="1"><?php _e('Registered','wp-support-plus-responsive');?></option>
-       <option value="0"><?php _e('Guest','wp-support-plus-responsive');?></option>
+       <option value="1"><?php _e('Registered','wp-support-plus-responsive-ticket-system');?></option>
+       <option value="0"><?php _e('Guest','wp-support-plus-responsive-ticket-system');?></option>
 </select><br><br>
 
 <div id="user_type_user_front">
@@ -44,7 +44,7 @@ $raised_by='';
     <?php }else{?>
      <input style="margin-top: 5px;" type="text" id="create_ticket_as_user" name="create_ticket_as_user" disabled="disabled" value="<?php echo $current_user->display_name;?>" />
      <?php }?>
-    <button type="button" class="btn btn-primary" id="wpsp_searchUser" onclick="getSearchUserForm();"><?php _e('Change User','wp-support-plus-responsive');?></button>
+    <button type="button" class="btn btn-primary" id="wpsp_searchUser" onclick="getSearchUserForm();"><?php _e('Change User','wp-support-plus-responsive-ticket-system');?></button>
     <br>
 </div>
 
@@ -64,13 +64,13 @@ $raised_by='';
     <input type="hidden" id="guest_email" name="guest_email" value="">
 </div>
     <div id="wsp_change_user_modal" style="display:none">
-        <h4 class="title" id="changeuserLabel"><?php _e('Select User','wp-support-plus-responsive');?></h4>
+        <h4 class="title" id="changeuserLabel"><?php _e('Select User','wp-support-plus-responsive-ticket-system');?></h4>
         <div id="wpspbody">
         <?php include( WCE_PLUGIN_DIR.'includes/admin/selectRegisteredUser.php' );?>
         </div>
     </div>
-    <button class="btn btn-success changeTicketSubBtn" onclick="wpsp_close_popup(<?php echo $ticket_id?>);"><?php _e('Cancel','wp-support-plus-responsive');?></button>
-    <button class="btn btn-success changeTicketSubBtn" onclick="setRaisedByTicketUser(<?php echo $ticket_id;?>);"><?php _e('Save Changes','wp-support-plus-responsive');?></button>
+    <button class="btn btn-success changeTicketSubBtn" onclick="wpsp_close_popup(<?php echo $ticket_id?>);"><?php _e('Cancel','wp-support-plus-responsive-ticket-system');?></button>
+    <button class="btn btn-success changeTicketSubBtn" onclick="setRaisedByTicketUser(<?php echo $ticket_id;?>);"><?php _e('Save Changes','wp-support-plus-responsive-ticket-system');?></button>
 
 </div>
 

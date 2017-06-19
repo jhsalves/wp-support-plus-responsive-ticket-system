@@ -15,10 +15,10 @@ $wpsp_open_ticket_page_url  = get_permalink(get_option( 'wpsp_ticket_open_page_s
 $wpsp_open_ticket_page_url .= '?ticket_id='.$ticket->id.'&auth='.$wpsp_hash->getHash($ticket->id);
 $wpsp_open_ticket_page_url  = '<a href="'.$wpsp_open_ticket_page_url.'">'.$wpsp_open_ticket_page_url.'</a>';
 
-$et_success_subject         = stripslashes($wpsp_et_create_new_ticket['success_subject']);
-$et_success_body            = stripslashes($wpsp_et_create_new_ticket['success_body']);
-$et_success_staff_subject   = stripslashes($wpsp_et_create_new_ticket['staff_subject']);
-$et_staff_body              = stripslashes($wpsp_et_create_new_ticket['staff_body']);
+$et_success_subject         = __(stripslashes($wpsp_et_create_new_ticket['success_subject']),'wp-support-plus-responsive-ticket-system');
+$et_success_body            = __(stripslashes($wpsp_et_create_new_ticket['success_body']),'wp-support-plus-responsive-ticket-system');
+$et_success_staff_subject   = __(stripslashes($wpsp_et_create_new_ticket['staff_subject']),'wp-support-plus-responsive-ticket-system');
+$et_staff_body              = __(stripslashes($wpsp_et_create_new_ticket['staff_body']),'wp-support-plus-responsive-ticket-system');
 
 $signature='';
 if($ticket->user_id){
@@ -34,7 +34,8 @@ if($ticket->agentCreated){
 
 $etCategoryName = $wpdb->get_var( "SELECT name FROM {$wpdb->prefix}wpsp_catagories where id=".$ticket->category );
 $etCategoryName = __($etCategoryName,'wp-support-plus-responsive-ticket-system');
-$priority       = __($ticket->priority,'wp-support-plus-responsive-ticket-system');
+$sql="select * FROM {$wpdb->prefix}wpsp_custom_priority WHERE name="."'$ticket->priority'";
+$cust_priority = $wpdb->get_row($sql);
 $description    = stripcslashes(htmlspecialchars_decode($ticket->body,ENT_QUOTES));
 
 foreach ($wpsp_et_create_new_ticket['templates'] as $et_key=>$et_val){
@@ -75,11 +76,11 @@ foreach ($wpsp_et_create_new_ticket['templates'] as $et_key=>$et_val){
 			$et_success_staff_subject = str_replace('{ticket_category}', $etCategoryName, $et_success_staff_subject);
 			$et_staff_body = str_replace('{ticket_category}', $etCategoryName, $et_staff_body);
 			break;
-		case 'ticket_priotity': 
-			$et_success_subject = str_replace('{ticket_priotity}', $priority, $et_success_subject);
-			$et_success_body = str_replace('{ticket_priotity}', $priority, $et_success_body);
-			$et_success_staff_subject = str_replace('{ticket_priotity}', $priority, $et_success_staff_subject);
-			$et_staff_body = str_replace('{ticket_priotity}', $priority, $et_staff_body);
+		case 'ticket_priority': 
+            $et_success_subject = str_replace('{ticket_priority}', $cust_priority->name, $et_success_subject);
+			$et_success_body = str_replace('{ticket_priority}', $cust_priority->name, $et_success_body);
+			$et_success_staff_subject = str_replace('{ticket_priority}', $cust_priority->name, $et_success_staff_subject);
+			$et_staff_body = str_replace('{ticket_priority}', $cust_priority->name, $et_staff_body);
 			break;
                 case 'ticket_url': 
 			$et_success_body = str_replace('{ticket_url}', $wpsp_open_ticket_page_url, $et_success_body);
@@ -249,7 +250,6 @@ $body.=$et_staff_body.$signature;
 //error_log(PHP_EOL.'Headers in create ticket:'.PHP_EOL.implode(PHP_EOL, $headers));
 //error_log('Subject:'.PHP_EOL.$subject);
 //error_log('Body:'.PHP_EOL.$body);
-
 if($to){
     $emailAttachments=apply_filters('wpsp_emailattachment_in_sendticketcreatemail_template',$ticket->email_attachments, $ticket,$to,$headers);
     $headers=apply_filters('wpsp_after_send_staff_email_in_sendticketcreatemail',$headers,$ticket,$piping_emails,$ignore_emails,$emailAttachments);

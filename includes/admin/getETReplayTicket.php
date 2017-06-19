@@ -72,4 +72,5 @@ foreach ($wpsp_et_reply_ticket['templates'] as $key=>$val){
 	<textarea id='wpsp_et_staff_email_body_for_reply' name='wpsp_et_staff_email_body'><?php echo stripslashes($wpsp_et_reply_ticket['reply_body']);?></textarea>
 	<hr>
 	<button id="wpsp_save_et_cteate_new_ticket" type="submit" class="btn btn-success"><?php _e("Save Settings", 'wp-support-plus-responsive-ticket-system' );?></button>
+        <button id="wpsp_save_et_reply_ticket"  onclick="wpsp_reset_et_replyticket(event);" type="submit" class="btn btn-success"><?php _e("Reset Settings", 'wp-support-plus-responsive-ticket-system' );?></button>
 </form>

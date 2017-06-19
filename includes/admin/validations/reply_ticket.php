@@ -1,6 +1,8 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+if(!class_exists('WPSPTicketReply')) :
+
 class WPSPTicketReply {
     
     public $ticket_id;
@@ -123,7 +125,6 @@ class WPSPTicketReply {
     }
     
     function createThread(){
-        
         global $wpdb;
         $values = array(
             'ticket_id'         => $this->ticket_id,
@@ -137,7 +138,6 @@ class WPSPTicketReply {
         );
         $values = apply_filters('wpsp_reply_field_ticket_thread_values', $values, $this);
         $wpdb->insert($wpdb->prefix . 'wpsp_ticket_thread', $values);
-        
     }
     
     function updateTicket(){
@@ -268,18 +268,16 @@ class WPSPTicketReply {
         }
         if ($generalSettings['ticket_status_after_cust_reply'] != 'default' && $this->ticket->created_by == $this->thread_user_id) {
             $replyStatus = $generalSettings['ticket_status_after_cust_reply'];
-        } else if( $this->thread_user_object && !$this->thread_user_object->has_cap( 'manage_support_plus_ticket' ) ){
-            $sql = "select name from {$wpdb->prefix}wpsp_custom_status WHERE id=" . $generalSettings['default_new_ticket_status'];
-            $replyStatus = $wpdb->get_var($sql);
         }
         if ( $this->is_pipe == 1 ) {
             $replyStatus = apply_filters('wpsp_reply_ticket_status_after_dashboard_reply', $replyStatus, $this->ticket);
         } else {
             $replyStatus = apply_filters('wpsp_reply_ticket_status_after_pipe_reply', $replyStatus, $this->ticket);
         }
-        return $replyStatus;
-        
+       return $replyStatus;
+       
     }
     
 }
-?>
+
+endif;

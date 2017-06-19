@@ -11,27 +11,20 @@ final class WPSupportPlusAdmin {
 	}
 	
 	function loadScripts(){
-		$advancedSettings=get_option( 'wpsp_advanced_settings');
-                wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'jquery-ui-core' );
-                wp_enqueue_script( 'jquery-ui-dialog' );
-                wp_enqueue_style ( 'wp-jquery-ui-dialog' );
-                wp_enqueue_script('wpsp_admin', WCE_PLUGIN_URL.'asset/js/admin.js?version='.WPSP_VERSION);
-		if($advancedSettings['enable_accordion']==1){
-                    /* BEGIN CLOUGH I.T. SOLUTIONS MODIFICATION
-                    * Update 18 - Thread accordion
-                    * jQuery accordion for threads
-                    */ 
-                   wp_enqueue_script( 'jquery-ui-accordion' );
-                   wp_enqueue_style("jquery-ui-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.min.css');
-                   wp_enqueue_style("jquery-ui-structure-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.structure.min.css');
-                   wp_enqueue_style("jquery-ui-theme-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.theme.min.css');
-                   /* END CLOUGH I.T. SOLUTIONS MODIFICATION
-                    */
-                }
-		wp_enqueue_style('wpce_admin', WCE_PLUGIN_URL . 'asset/css/admin.css?version='.WPSP_VERSION);
-                wp_enqueue_script('jquery-ui-datepicker');
-                wp_enqueue_style('wpce_admin', WCE_PLUGIN_URL . 'asset/css/jquery-ui.css?version='.WPSP_VERSION);
+            $advancedSettings=get_option( 'wpsp_advanced_settings');
+            wp_enqueue_script( 'jquery' );
+            wp_enqueue_script( 'jquery-ui-core' );
+            wp_enqueue_script( 'jquery-ui-dialog' );
+            wp_enqueue_style ( 'wp-jquery-ui-dialog' );
+            wp_enqueue_script('wpsp_admin', WCE_PLUGIN_URL.'asset/js/admin.js?version='.WPSP_VERSION);
+            wp_enqueue_style("jquery-ui-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.min.css?version='.WPSP_VERSION);
+            wp_enqueue_style("jquery-ui-structure-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.structure.min.css?version='.WPSP_VERSION);
+            wp_enqueue_style("jquery-ui-theme-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.theme.min.css?version='.WPSP_VERSION);
+            if($advancedSettings['enable_accordion']==1){
+                wp_enqueue_script( 'jquery-ui-accordion' );
+            }
+            wp_enqueue_style('wpce_admin', WCE_PLUGIN_URL . 'asset/css/admin.css?version='.WPSP_VERSION);
+            wp_enqueue_script('jquery-ui-datepicker');
 	}
 	
 	function custom_menu_page(){
@@ -90,7 +83,7 @@ final class WPSupportPlusAdmin {
                 'sure_to_delete_thread'=>__('Are you sure to delete this thread?','wp-support-plus-responsive-ticket-system'),
                 'wpspAttachment_bc'=>$advancedSettings['wpspAttachment_bc'],                 
                 'wpspAttachment_pc'=>$advancedSettings['wpspAttachment_pc'],
-                'sure_to_restore_ticket'=>__('Are you sure to restore ticket?','wp-support-plus-responsive')
+                'sure_to_restore_ticket'=>__('Are you sure to restore ticket?','wp-support-plus-responsive-ticket-system')
             );
             wp_localize_script( 'wpce_display_ticket', 'display_ticket_data', $localize_script_data );
 
@@ -166,7 +159,7 @@ final class WPSupportPlusAdmin {
 
 	function advancedsettings(){
 		//Load Bootstrap
-		//wp_enqueue_script('wpce_bootstrap', WCE_PLUGIN_URL . 'asset/js/bootstrap/js/bootstrap.min.js?version='.WPSP_VERSION);
+		wp_enqueue_script('wpce_bootstrap', WCE_PLUGIN_URL . 'asset/js/bootstrap/js/bootstrap.min.js?version='.WPSP_VERSION);
 		wp_enqueue_style('wpce_bootstrap', WCE_PLUGIN_URL . 'asset/js/bootstrap/css/bootstrap.min.css?version='.WPSP_VERSION);
 		wp_enqueue_script( 'my-jquery-ui' );
 		wp_enqueue_script('jquery-ui-dropable');
@@ -216,12 +209,41 @@ final class WPSupportPlusAdmin {
 	
 	function support(){
 		$this->check_offer();
+                
+                wp_enqueue_script('wpce_admin_settings', WCE_PLUGIN_URL . 'asset/js/admin_settings.js?version='.WPSP_VERSION);
+                $localize_script_data=array(
+				'wpsp_ajax_url'=>admin_url( 'admin-ajax.php' ),
+				'wpsp_site_url'=>site_url(),
+				'plugin_url'=>WCE_PLUGIN_URL,
+				'plugin_dir'=>WCE_PLUGIN_DIR
+		);
+                wp_localize_script( 'wpce_admin_settings', 'display_ticket_data', $localize_script_data );
 		?>
                 <br>
-                <p class="wpsp_support_page_paragraph">Please check <b><a target="_blank" href="http://pradeepmakone.com/documentation/">Documentation</a></b> before creating Support Ticket.</p>
-                <p class="wpsp_support_page_paragraph"><b><a target="_blank" href="https://www.wpsupportplus.com/support/">Click here</a></b> to Create Support Ticket for <b>WP Support Plus</b>. Support ticket is one to one conversation between you and our support team, so you can share login details and access required to check issue on your site.</p>
-                <p class="wpsp_support_page_paragraph"><i>(Support Ticket will be replied on priority of users. Our customers who purchased at least one Add-On will get high priority while replying to tickets.)</i></p>
-		<?php 
+                <p class="wpsp_support_page_paragraph">Please check <b><a target="_blank" href="https://www.wpsupportplus.com/documentation/">Documentation</a></b> before creating Support Ticket.</p>
+                <p class="wpsp_support_page_paragraph"><b><a target="_blank" href="https://www.wpsupportplus.com/support/">Click here</a></b> to Create Support Ticket for <b>WP Support Plus</b>. Support ticket is one to one conversation between you and our support team. Here we are offering priority support to our customers who purchased at least one add-on.</p>
+                <p class="wpsp_support_page_paragraph">If you want free support, please create new topic to our wordpress.org on <a href="https://wordpress.org/support/plugin/wp-support-plus-responsive-ticket-system" target="_blank">this page</a>. If you have any pre-sale question or want to contact privately, please like our <a href="https://www.facebook.com/wpsupportplus/" target="_blank">Facebook Page</a> and send private message.</p>
+                
+                    
+                <div id="wpsp_support_backup" class="wpsp_support_backup">
+                    <h2>System Information</h2>
+                    We are always there to help you. If you have any issue regarding WP Support Plus plugin,<br>
+                    please create a system information file by clicking below button and send us the file while creating ticket. <br>
+                    We will try our best to solve your issue.
+                    The system information file have following information
+                    <ul>
+                        <li>Server Information</li>
+                        <li>WP Support Plus settings</li>
+                        <li>Active plugins on the server</li>
+                        <li>Active theme</li>
+                    </ul>
+                    <button class="btn btn-success" id="wpsp_take_settings_backup" onclick="setwpspSettingsBackup();"><?php _e('Download WPSP System info','wp-support-plus-responsive-ticket-system');?></button>
+                    <img id="wpsp_take_settings_backup_wait" style="width: 16px; display: none;" alt="Please Wait" src="<?php echo WCE_PLUGIN_URL.'asset/images/ajax-loader@2x.gif?ver='.WPSP_VERSION;?>">
+                    <form id="wpsp_frmDownloadSystemInfo" action="" method="post">
+                        <input type="hidden" name="wpsp_system_info" value="1" />
+                    </form>
+                </div>
+                <?php 
 	}
 	
 	function statistics(){
@@ -265,7 +287,8 @@ final class WPSupportPlusAdmin {
 				'wpsp_ajax_url'=>admin_url( 'admin-ajax.php' ),
 				'wpsp_site_url'=>site_url(),
 				'plugin_url'=>WCE_PLUGIN_URL,
-				'plugin_dir'=>WCE_PLUGIN_DIR
+				'plugin_dir'=>WCE_PLUGIN_DIR,
+                                'sure_to_reset_setting'=>__('Are you sure to reset this settings?','wp-support-plus-responsive-ticket-system')
 		);
 		wp_localize_script( 'wpce_email_template_settings', 'display_ticket_data', $localize_script_data );
 		wp_enqueue_script('wpce_ckeditor_editor', WCE_PLUGIN_URL . 'asset/lib/ckeditor/ckeditor.js?version='.WPSP_VERSION);
@@ -293,7 +316,7 @@ final class WPSupportPlusAdmin {
 				'wpsp_site_url'=>site_url(),
 				'plugin_url'=>WCE_PLUGIN_URL,
 				'plugin_dir'=>WCE_PLUGIN_DIR,
-                                'insert_canned_reply_title'=>__('Please enter Canned reply title!','wp-support-plus-responsive')
+                                'insert_canned_reply_title'=>__('Please enter Canned reply title!','wp-support-plus-responsive-ticket-system')
 		);
                 wp_localize_script( 'wpce_canned_reply', 'display_ticket_data', $localize_script_data );
                 wp_enqueue_script('wpce_ckeditor_editor', WCE_PLUGIN_URL . 'asset/lib/ckeditor/ckeditor.js?version='.WPSP_VERSION);                
@@ -318,10 +341,26 @@ final class WPSupportPlusAdmin {
         }
         
         function is_addon_activated(){
-            if(class_exists('WPSupportPlusEmailPipe') || class_exists('WPSupportPlusWoocommerce') || class_exists('WPSupportPlusExportTicket') || class_exists('WPSP_EDD') || class_exists('WPSP_TIMER') || class_exists('WPSP_COMPANY') || class_exists('WPSP_CANNED_REPLY')|| class_exists('WPSP_GOOGLE_CAL_EVENT') ){
-                return true;
+            $addons = array(
+                'WPSupportPlusEmailPipe',
+                'WPSupportPlusWoocommerce',
+                'WPSupportPlusExportTicket',
+                'WPSP_EDD',
+                'WPSP_TIMER',
+                'WPSP_COMPANY',
+                'WPSP_CANNED_REPLY',
+                'WPSP_GOOGLE_CAL_EVENT',
+                'WPSP_STICK_TICKET',
+                'WPSP_CONDITIONAL_AGENT_ASSIGN'
+            );
+            $flag = FALSE;
+            foreach ($addons as $addon){
+                if(class_exists($addon)){
+                    $flag = TRUE;
+                    break;
+                }
             }
-            return false;
+            return $flag;
         }
 
 }

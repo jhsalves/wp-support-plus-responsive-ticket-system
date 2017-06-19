@@ -802,7 +802,46 @@ final class SupportPlusAjax {
         include_once( WCE_PLUGIN_DIR.'includes/admin/setEditThread.php' );                        
         die();         
     }
-
+    
+    function getTicketStatistics(){
+        include_once( WCE_PLUGIN_DIR.'includes/admin/getTicketStatistics.php' );                        
+        die();
+    }
+    
+    function wpspgetFrontDashboardStatistics(){
+        include_once( WCE_PLUGIN_DIR.'includes/admin/getFrontDashboardStatistics.php' );                        
+        die();
+    }
+    
+    function resetETCreateNewTicket(){
+        include_once( WCE_PLUGIN_DIR.'includes/admin/resetETCreateNewTicket.php' );                        
+        die();
+    }
+    
+    function resetETReplyTicket(){
+        include_once( WCE_PLUGIN_DIR.'includes/admin/resetETReplyTicket.php' );                        
+        die();
+    }
+    
+    function resetETChangeTicketStatus(){
+        include_once( WCE_PLUGIN_DIR.'includes/admin/resetETChangeTicketStatus.php' );                        
+        die();
+    }
+    
+    function resetETAssignAgent(){
+        include_once( WCE_PLUGIN_DIR.'includes/admin/resetETAssignAgent.php' );                        
+        die();
+    }
+    
+    function resetETDeleteTicket(){
+        include_once( WCE_PLUGIN_DIR.'includes/admin/resetETDeleteTicket.php' );                        
+        die();
+    }
+    
+    function setwpspSettingsBackup(){
+        include( WCE_PLUGIN_DIR . 'includes/admin/setwpspSettingsBackup.php' );                
+        die();
+    }
 }
 
 ?>

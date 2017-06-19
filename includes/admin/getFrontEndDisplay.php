@@ -133,11 +133,11 @@ $FrontEndDisplaySettings = get_option('wpsp_front_end_display_settings');
         <td><input type="text" id="wpsp_sr_bc" value="<?php _e($FrontEndDisplaySettings['wpsp_sr_bc'],'wp-support-plus-responsive-ticket-system');?>" class="wp-support-plus-color-picker" ></td>
     </tr>
     <tr>
-        <td><?php _e('Change Raised By (shown to agents only)', 'wp-support-plus-responsive'); ?></td>
+        <td><?php _e('Change Raised By (shown to agents only)', 'wp-support-plus-responsive-ticket-system'); ?></td>
         <td><input <?php echo ($FrontEndDisplaySettings['wpsp_ChangeRaisedBy'] == 1) ? 'checked="checked"' : ''; ?>type="checkbox" id="hideChangeRaisedBy" ></td>
-        <td><input type="text" name="wpspFrontEndDisplayAlice" value="<?php _e($FrontEndDisplaySettings['front_end_display_alice'][13],'wp-support-plus-responsive');?>"></td>
-        <td><input type="text" id="wpsp_cb_fc" value="<?php _e($FrontEndDisplaySettings['wpsp_cb_fc'],'wp-support-plus-responsive');?>" class="wp-support-plus-color-picker" ></td>
-        <td><input type="text" id="wpsp_cb_bc" value="<?php _e($FrontEndDisplaySettings['wpsp_cb_bc'],'wp-support-plus-responsive');?>" class="wp-support-plus-color-picker" ></td>
+        <td><input type="text" name="wpspFrontEndDisplayAlice" value="<?php _e($FrontEndDisplaySettings['front_end_display_alice'][13],'wp-support-plus-responsive-ticket-system');?>"></td>
+        <td><input type="text" id="wpsp_cb_fc" value="<?php _e($FrontEndDisplaySettings['wpsp_cb_fc'],'wp-support-plus-responsive-ticket-system');?>" class="wp-support-plus-color-picker" ></td>
+        <td><input type="text" id="wpsp_cb_bc" value="<?php _e($FrontEndDisplaySettings['wpsp_cb_bc'],'wp-support-plus-responsive-ticket-system');?>" class="wp-support-plus-color-picker" ></td>
     </tr>
     
 </table>

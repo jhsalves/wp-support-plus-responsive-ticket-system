@@ -16,4 +16,5 @@ $sql="select * FROM {$wpdb->prefix}wpsp_ticket WHERE id=".$ticket_id;
 $ticket = $wpdb->get_row( $sql );
 
 include( WCE_PLUGIN_DIR.'includes/admin/sendChangeTicketStatusMail.php' );
+do_action('wpsp_after_change_indivisual_ticket_status',$ticket_id);
 ?>

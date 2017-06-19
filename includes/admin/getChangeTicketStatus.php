@@ -111,7 +111,7 @@ if(in_array('dp',$display_fields)){
 			<?php 
 			foreach ($priorities as $priority){
 				?>
-				<option value="<?php echo strtolower($priority->name);?>" <?php echo ($ticket->priority==strtolower($priority->name))?'selected="selected"':'';?>><?php _e($priority->name,'wp-support-plus-responsive-ticket-system');?></option>
+            <option value="<?php echo strtolower($priority->name);?>" <?php echo (strtolower($ticket->priority)==  strtolower($priority->name))?'selected="selected"':'';?>><?php _e($priority->name,'wp-support-plus-responsive-ticket-system');?></option>
 			<?php
 			}
 			?>

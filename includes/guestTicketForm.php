@@ -300,7 +300,7 @@ $advancedSettingsFieldOrder=get_option( 'wpsp_advanced_settings_field_order' );
                                                                 <option value="" ></option>	
                                                                     <?php 
 									foreach ($priorities as $priority){
-								        echo '<option value="'.strtolower($priority->name).'" >'.__($priority->name,'wp-support-plus-responsive-ticket-system').'</option>';
+								        echo '<option value="'.($priority->name).'" >'.__($priority->name,'wp-support-plus-responsive-ticket-system').'</option>';
 									}
 									?>
 								</select><br><br>

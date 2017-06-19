@@ -4,7 +4,7 @@ License: GPL v3
 Tags: ticket,support,helpdesk,crm,responsive,chat,skype,email pipe,contact,faq,woocommerce
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 8.0.2
+Stable tag: 8.0.7
 
 == Description ==
 
@@ -77,6 +77,39 @@ You can also get some basic documentation on [this link](http://pradeepmakone.co
 
 
 == Changelog ==
+= V 8.0.7 =
+* Tweak : Setting to disable edit ticket information for agents
+* Tweak : Change User list increased t0 20 results for search on create ticket on behalf of another user in backend
+* Tweak : System Information file download for us to attach in ticket for better support
+* Fix : jQuery UI loading issue
+* Fix : Statistic and assigned to filter wrong results
+* Fix : Status change to default if user reply ticket
+* Fix : Filters not available for hidden ticket status for front-tend
+* Fix : Charset added to table creation query
+* Fix : Repeating headers in Non-Accordion view
+
+= V 8.0.6 =
+* Fix: Avatars not working on front-end if email is disabled for thread in front-end display settings.
+* Fix: Priority issue for email piping created tickets fixed.
+
+= V 8.0.5 =
+* Fix: Canned reply not working on multisite blogs
+* Fix: Extra HTML append to .txt files for attachments
+* Fix: Documentation link changed
+
+= V 8.0.4 =
+* Fix: Urgent fix for Email Piping Add-on
+
+= V 8.0.3 =
+* Tweak: WPML Support for Email Templates
+* Tweak: Setting to hide multiple statuses from frontend
+* Tweak: Dashboard Tab added for [wp_support_plus] shortcode showing stats for logged in user and for future use applications
+* Fix: Translation improved
+* Fix: Can't Edit Links while editing reply in backend
+* Fix: Captcha checkbox disappear for some theme like Divi
+* Fix: Incorrect spelling for email template
+* Small bug fixes
+
 = V 8.0.2 =
 * Fix: Canned reply urgent bug fix
 * Fix: Ticket list not showing on some servers. MySQL table index repair for WP Support Plus

@@ -102,48 +102,18 @@ if(!$advancedSettings['modify_raised_by']) $advancedSettings['modify_raised_by']
 <hr>
 
 <span class="label label-info wpsp_title_label"><?php _e('Hide Selected Status Tickets on Front-end','wp-support-plus-responsive-ticket-system');?></span><br><br>
-<form id="wpspBackendTicketFilter1">
-<div class="filter_item">
-	<table>
-		<tr>
-			<td><?php _e('Status:','wp-support-plus-responsive-ticket-system');?></td>
-			<td>
-				<select id="hide_selected_status_ticket" name="hide_selected_status_ticket">
-					<option value="none" <?php echo ($advancedSettings['hide_selected_status_ticket']=='none')?'selected="selected"':'';?>><?php _e('None','wp-support-plus-responsive-ticket-system');?></option>
-					<?php
-					$sql_status="select * from {$wpdb->prefix}wpsp_custom_status";
-					$custom_statusses=$wpdb->get_results($sql_status);
-					$total_statusses=$wpdb->num_rows;
-					$advancedSettingsStatusOrder=get_option( 'wpsp_advanced_settings_status_order' );
-					if(isset($advancedSettingsStatusOrder['status_order'])){
-						if(is_array($advancedSettingsStatusOrder['status_order'])){
-							$custom_statusses=array();
-							foreach($advancedSettingsStatusOrder['status_order'] as $status_id)
-		                                        {   $sql="select * from {$wpdb->prefix}wpsp_custom_status WHERE id=".$status_id."";
-							    $status_data=$wpdb->get_results($sql);
-							    foreach($status_data as $status){
-							    $custom_statusses=array_merge($custom_statusses,array($status));
-						            }
-                                                        }   
-						}
-					}		
-                                   
-					if($total_statusses)
-					{
-						foreach($custom_statusses as $custom_status){?>
-                                        <option value="<?php echo $custom_status->name;?>" <?php echo ($advancedSettings['hide_selected_status_ticket']==$custom_status->name)?'selected="selected"':'';?>><?php _e($custom_status->name,'wp-support-plus-responsive-ticket-system');?></option>
-						<?php
-						}
-					}
-					?>
-				</select>
-			</td>
-		</tr>
-	</table>
-</div>
-</form>
+<table><?php 
+$sql_status="select * from {$wpdb->prefix}wpsp_custom_status";
+$custom_statusses=$wpdb->get_results($sql_status);
+foreach ($custom_statusses as $custom_status){
+    ?><tr>
+        <td><input <?php echo (is_numeric(array_search($custom_status->id,$advancedSettings['hide_selected_status_ticket_frontend'])))?'checked="checked"':'';?> type="checkbox" name="hideSelectedStatusFrontend[]" value="<?php echo $custom_status->id;?>"/></td>
+        <td><?php _e($custom_status->name,'wp-support-plus-responsive-ticket-system');?></td>
+    </tr><?php
+}
+?></table>
 <br>
-<table>
+<!--<table>
      <tr>
          <td class=""><?php _e('Message for Ticket URL screen for above selected status:','wp-support-plus-responsive-ticket-system');?></td>  
      </tr>
@@ -152,7 +122,7 @@ if(!$advancedSettings['modify_raised_by']) $advancedSettings['modify_raised_by']
             <textarea id="wpsp_ticket_url_message"><?php echo stripslashes(htmlspecialchars($advancedSettings['message_for_ticket_url']));?></textarea>
          </td>
      </tr>
- </table>
+ </table>-->
 <hr>
 
 <span class="label label-info wpsp_title_label"><?php _e('Date Custom Field1','wp-support-plus-responsive-ticket-system');?></span><br/><br/>
@@ -246,28 +216,28 @@ foreach ($userRoles as $roleSlug=>$role){
 <hr>
 
 <span class="label label-info wpsp_title_label"><?php _e('Attachment Settings','wp-support-plus-responsive-ticket-system');?></span><br><br>
-<?php _e('Attachment maximum file size','wp-support-plus-responsive');?> <input type="text" id="wpspAttachMaxFileSize" value="<?php echo $advancedSettings['wpspAttachMaxFileSize'];?>"><?php _e('MB','wp-support-plus-responsive-ticket-system');?>
+<?php _e('Attachment maximum file size','wp-support-plus-responsive-ticket-system');?> <input type="text" id="wpspAttachMaxFileSize" value="<?php echo $advancedSettings['wpspAttachMaxFileSize'];?>"><?php _e('MB','wp-support-plus-responsive-ticket-system');?>
 <br>
-<input type="radio" name="wpsp_download_url" value="1" <?php echo ($advancedSettings['wpsp_attachment_download_url']==1)?'checked="checked"':'';?>><?php _e('Download Attachment','wp-support-plus-responsive');?>
+<input type="radio" name="wpsp_download_url" value="1" <?php echo ($advancedSettings['wpsp_attachment_download_url']==1)?'checked="checked"':'';?>><?php _e('Download Attachment','wp-support-plus-responsive-ticket-system');?>
 <br>
-<input type="radio" name="wpsp_download_url" value="0" <?php echo ($advancedSettings['wpsp_attachment_download_url']==0)?'checked="checked"':'';?>><?php _e('Try opening in browser with direct attachment url','wp-support-plus-responsive');?>
+<input type="radio" name="wpsp_download_url" value="0" <?php echo ($advancedSettings['wpsp_attachment_download_url']==0)?'checked="checked"':'';?>><?php _e('Try opening in browser with direct attachment url','wp-support-plus-responsive-ticket-system');?>
 <hr>
-<span class="label label-info wpsp_title_label"><?php _e('Attachment Color Setting','wp-support-plus-responsive');?></span><br><br> 
+<span class="label label-info wpsp_title_label"><?php _e('Attachment Color Setting','wp-support-plus-responsive-ticket-system');?></span><br><br> 
 <table>     
     <tr>         
         <td>             
-            <?php _e('Attachment Background Color : ','wp-support-plus-responsive');?>         
+            <?php _e('Attachment Background Color : ','wp-support-plus-responsive-ticket-system');?>         
         </td>         
         <td>             
-            <input type="text" id="wpspAttachment_bc" value="<?php _e($advancedSettings['wpspAttachment_bc'],'wp-support-plus-responsive');?>" class="wp-support-plus-color-picker" >         
+            <input type="text" id="wpspAttachment_bc" value="<?php _e($advancedSettings['wpspAttachment_bc'],'wp-support-plus-responsive-ticket-system');?>" class="wp-support-plus-color-picker" >         
         </td>     
     </tr>     
     <tr>        
         <td>         
-            <?php _e('Attachment Progress Bar Color :  ','wp-support-plus-responsive');?>         
+            <?php _e('Attachment Progress Bar Color :  ','wp-support-plus-responsive-ticket-system');?>         
         </td>         
         <td>             
-            <input type="text" id="wpspAttachment_pc" value="<?php _e($advancedSettings['wpspAttachment_pc'],'wp-support-plus-responsive');?>" class="wp-support-plus-color-picker" >         
+            <input type="text" id="wpspAttachment_pc" value="<?php _e($advancedSettings['wpspAttachment_pc'],'wp-support-plus-responsive-ticket-system');?>" class="wp-support-plus-color-picker" >         
         </td>     
     </tr> 
 </table> 

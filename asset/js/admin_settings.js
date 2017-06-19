@@ -27,6 +27,9 @@ jQuery(document).ready(function(){
         jQuery('#tab_addon_license_container').click(function(){
 		getAddOnLicenses();
 	});
+        jQuery('#tab_support_backup_container').click(function(){
+		getSupportBackup();
+	});
 });
 
 function getGeneralSettings(){
@@ -91,6 +94,11 @@ function setGeneralSettings(){
 	        enable_register_guest=1;
 	}
         
+        var allow_agents_to_edit_tickets=0;
+	if(jQuery('#setAgentTicketEdit').is(':checked')){
+		allow_agents_to_edit_tickets=1;
+	}
+
         var data = {
 		'action': 'setGeneralSettings',
 		'post_id': jQuery('#setSupportPage').val(),
@@ -116,7 +124,8 @@ function setGeneralSettings(){
                 'close_ticket_btn_status' : jQuery('#close_btn_ticket_status').val(),
                 'close_btn_alice':jQuery('#wpsp_close_btn_alice').val(),
                 'enable_register_guest_user':enable_register_guest,
-                'guest_user_role':jQuery('#setUserRole').val()
+                'guest_user_role':jQuery('#setUserRole').val(),
+                'allow_agents_to_edit_tickets':allow_agents_to_edit_tickets
 	};
 	
 	jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
@@ -802,4 +811,15 @@ function deleteImapConnection(index){
             getMailSettings();
         });
     }
+}
+
+function setwpspSettingsBackup(){
+    jQuery('#wpsp_take_settings_backup_wait').show();
+    var data = {
+        'action': 'setwpspSettingsBackup'
+    };
+    jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+        jQuery('#wpsp_take_settings_backup_wait').hide();
+        jQuery('#wpsp_frmDownloadSystemInfo').submit();
+    });
 }

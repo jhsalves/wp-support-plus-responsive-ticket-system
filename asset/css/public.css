@@ -81,10 +81,6 @@
     width: 100%;
 }
 
-.faq_item {
-    float: left;
-}
-
 .faq_search {
     width:15%;
     margin-right: 5px;
@@ -115,7 +111,7 @@
 	padding: 0 !important;
 }
 
-#filter_by_faq_search_front{height: 30px !important;}
+#filter_by_faq_search_front{font-size:  12px !important;}
 
 .filter_item{
 	float: left;
@@ -336,6 +332,9 @@
     text-align: center !important;font-size: 12px;
     display: none !important;
 }
+.unclickableAccBody{
+    display: none !important;
+}
 .wpsp_edit_fields {height: 12px;margin-left: 5px;width: 15px;cursor: pointer;}
 
 .wpsp_paperclip_image{
@@ -374,3 +373,42 @@
     width: 95%;
 }
 #cke_create_ticket_body_guest{margin-top: 10px;}
+.wpsp_stats_box {
+    display: inline-block;
+    list-style: outside none none;
+    margin-left: 0;
+    margin-top: 20px;
+    padding: 10px 0 0 0;
+}
+.wpsp_stats_box li {
+    background: #eee none repeat scroll 0 0;
+    box-shadow: 0 0 0 1px #f8f8f8 inset, 0 0 0 1px #cccccc;
+    display: inline-block;
+    float: left;
+    line-height: 18px;
+    margin: 0 10px 10px;
+    padding: 0 10px 0 0;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.wpsp_stat_count {
+    border-right: 1px solid #dcdcdc;
+    box-shadow: 1px 0 0 0 #fff;
+    float: left;
+    line-height: 52px;
+    margin-right: 12px;
+    min-width: 50px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+}
+.wpsp_stats_box .wpsp_stat_text {
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 28px;
+    min-width: 164px;
+    padding: 9px 10px 7px 0;
+    position: relative;
+    text-align: left;
+}

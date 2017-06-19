@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 <div id="wpsp_nocaptcha">
     <table>
         <tr>
-            <td style="width:30px;">
+            <td style="width:30px;padding:0px !important;">
                 <img alt="wpspnocaptcha" id="wpsp_nocaptcha_checkbox" onclick="get_wpsp_nocaptcha_token();" src="<?php echo WCE_PLUGIN_URL.'asset/images/checkbox_unchecked.png';?>"/>
                 <img alt="wpspwait" id="wpsp_spam_check_loading" style="display: none;" src="<?php echo WCE_PLUGIN_URL.'asset/images/loading_small.gif';?>"/>
                 <img alt="checked" id="wpsp_spam_check_done" style="display: none;" src="<?php echo WCE_PLUGIN_URL.'asset/images/checkmark.png';?>"/>

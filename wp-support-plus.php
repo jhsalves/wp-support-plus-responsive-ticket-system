@@ -3,7 +3,7 @@
  * Plugin Name: WP Support Plus
  * Plugin URI: https://wordpress.org/plugins/wp-support-plus-responsive-ticket-system-ticket-system/
  * Description: Easy to use Customer Support System in Wordpress itself!
- * Version: 8.0.2
+ * Version: 8.0.7
  * Author: Pradeep Makone
  * Author URI: http://profiles.wordpress.org/pradeepmakone07/
  * Requires at least: 4.4
@@ -67,12 +67,19 @@ final class WPSupportPlus{
         }
 
 	function do_output_buffer() {
-		if ((isset($_REQUEST['page']) && $_REQUEST['page']=='wp-support-plus-faq')||(isset($_REQUEST['page']) && $_REQUEST['page']=='wp-support-plus-Canned-Reply')){
-                    ob_start();
-		}
-                if(isset($_REQUEST['ticket_attachment'])){
-                    include( WCE_PLUGIN_DIR.'includes/admin/attachment/download_attachment.php' );
-                }
+            
+            if ((isset($_REQUEST['page']) && $_REQUEST['page']=='wp-support-plus-faq')||(isset($_REQUEST['page']) && $_REQUEST['page']=='wp-support-plus-Canned-Reply')){
+                ob_start();
+            }
+            
+            if(isset($_REQUEST['ticket_attachment'])){
+                include( WCE_PLUGIN_DIR.'includes/admin/attachment/download_attachment.php' );
+            }
+            
+            if(isset($_REQUEST['wpsp_system_info'])){
+                include( WCE_PLUGIN_DIR.'includes/admin/attachment/download_system_info.php' );
+            }
+            
 	}
 	
 	function load_textdomain(){
@@ -89,7 +96,7 @@ final class WPSupportPlus{
 		define( 'WPSP_STORE_URL', "https://www.wpsupportplus.com/" );
                 define( 'WCE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		define( 'WCE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-		define( 'WPSP_VERSION', '8.0.2' );
+		define( 'WPSP_VERSION', '8.0.7' );
 	}
         
         function create_open_ticket_page(){

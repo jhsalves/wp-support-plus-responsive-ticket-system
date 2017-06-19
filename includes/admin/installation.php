@@ -150,7 +150,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
 		menu_icon varchar(200),
 		redirect_url varchar(200),
 		PRIMARY KEY  (id)
-	);";
+	)Charset=utf8;";
 	dbDelta( $sql );
 
 	$sql = "CREATE TABLE {$wpdb->prefix}wpsp_custom_fields (
@@ -197,17 +197,14 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
 	);";
 	dbDelta( $sql );
         
-        $tables=$wpdb->get_results("show tables like '%wpsp_canned_reply'");
-        if(count($tables)==0){
-            $sql = "CREATE TABLE {$wpdb->prefix}wpsp_canned_reply(
-                    id integer NOT NULL AUTO_INCREMENT,
-                    title TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-                    reply LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-                    uID integer NOT NULL,
-                    PRIMARY KEY  (id)
-            );";
-            $wpdb->query($sql);
-        }
+        $sql = "CREATE TABLE {$wpdb->prefix}wpsp_canned_reply (
+                id integer NOT NULL AUTO_INCREMENT,
+                title TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                reply LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                uID integer NOT NULL,
+                PRIMARY KEY  (id)
+        );";
+        dbDelta( $sql );
         
         //Add column if not present.
         $coloums=$wpdb->get_results("SHOW COLUMNS FROM {$wpdb->prefix}wpsp_canned_reply like '%sid'");
@@ -401,6 +398,11 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
         if( !isset( $generalSettings['guest_user_role'] ) ) {
                 $generalSettings['guest_user_role'] = 'subscriber';
         }
+        
+        if(!isset($generalSettings['allow_agents_to_edit_tickets'])){
+                $generalSettings['allow_agents_to_edit_tickets']=1;
+        }
+
         update_option('wpsp_general_settings',$generalSettings);
 	
 	if( get_option( 'wpsp_email_notification_settings' ) === false ) {
@@ -769,7 +771,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
 				'ticket_subject' => __("Ticket Subject", 'wp-support-plus-responsive-ticket-system' ),
 				'ticket_description' => __("Ticket Description", 'wp-support-plus-responsive-ticket-system' ),
 				'ticket_category' => __("Ticket Category", 'wp-support-plus-responsive-ticket-system' ),
-				'ticket_priotity' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' )
+				'ticket_priority' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' )
 		);
 		foreach($customFields as $field){
 			$ticket_fields_list_backend=array_merge($ticket_fields_list_backend,array($field->id));
@@ -784,7 +786,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
 		$wpsp_et_create_new_ticket=array(
 				'enable_success'=>'1',
 				'success_subject'=>__("Your Ticket has been created successfully", 'wp-support-plus-responsive-ticket-system' ),
-				'success_body'=>'Dear {customer_name},<br />
+				'success_body'=>__('Dear {customer_name},<br />
 								<br />
 								Thank you for contacting Support. Your ticket has been created Successfully!<br />
 								<br />
@@ -794,12 +796,12 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
 								<strong>Description:</strong>
 								<p>{ticket_description}</p>
 								<br />
-								<br />',
+								<br />','wp-support-plus-responsive-ticket-system'),
 				'staff_subject'=>'{ticket_subject}',
-				'staff_body'=>'<strong>{customer_name} ({customer_email})</strong> wrote:
+				'staff_body'=>__('<strong>{customer_name} ({customer_email})</strong> wrote:
 								<p>{ticket_description}</p>
 								<br />
-								<br />',
+								<br />','wp-support-plus-responsive-ticket-system'),
 				'templates'=>$templates,
 				'staff_to_notify'=>$staff_to_notify
 		);
@@ -808,19 +810,23 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
         $wpsp_et_create_new_ticket=get_option( 'wpsp_et_create_new_ticket' );
         if(!isset($wpsp_et_create_new_ticket['templates']['ticket_url'])){
             $wpsp_et_create_new_ticket['templates']['ticket_url']=__("Ticket URL", 'wp-support-plus-responsive-ticket-system' );
-            update_option('wpsp_et_create_new_ticket',$wpsp_et_create_new_ticket);
         }
-        $wpsp_et_create_new_ticket['templates']['ticket_description']=__("Ticket Description", 'wp-support-plus-responsive-ticket-system' );
-        update_option('wpsp_et_create_new_ticket',$wpsp_et_create_new_ticket);
-	if(!isset($wpsp_et_create_new_ticket['templates']['time_created'])){
+        if(isset($wpsp_et_create_new_ticket['templates']['ticket_priotity'])){
+            unset($wpsp_et_create_new_ticket['templates']['ticket_priotity']);
+            $wpsp_et_create_new_ticket['templates']['ticket_priority']=__("Ticket Priority", 'wp-support-plus-responsive-ticket-system' );
+        }
+        if(!isset($wpsp_et_create_new_ticket['templates']['ticket_description'])){
+            $wpsp_et_create_new_ticket['templates']['ticket_description']=__("Ticket Description", 'wp-support-plus-responsive-ticket-system' );
+        }
+        if(!isset($wpsp_et_create_new_ticket['templates']['time_created'])){
             $wpsp_et_create_new_ticket['templates']['time_created']=__("Ticket Created", 'wp-support-plus-responsive-ticket-system' );
-            update_option('wpsp_et_create_new_ticket',$wpsp_et_create_new_ticket);
         }
         if(!isset($wpsp_et_create_new_ticket['templates']['agent_created'])){
             $wpsp_et_create_new_ticket['templates']['agent_created']=__("Agent Created", 'wp-support-plus-responsive-ticket-system' );
-            update_option('wpsp_et_create_new_ticket',$wpsp_et_create_new_ticket);
         }
-	/* Reply Ticket email template
+        update_option('wpsp_et_create_new_ticket',$wpsp_et_create_new_ticket);
+	
+        /* Reply Ticket email template
 	*/
 	
 	if( get_option( 'wpsp_et_reply_ticket' ) === false ) {
@@ -834,7 +840,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
 				'ticket_subject' => __("Ticket Subject", 'wp-support-plus-responsive-ticket-system' ),
 				'reply_description' => __("Reply Description", 'wp-support-plus-responsive-ticket-system' ),
 				'ticket_category' => __("Ticket Category", 'wp-support-plus-responsive-ticket-system' ),
-				'ticket_priotity' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' )
+				'ticket_priority' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' )
 		);
 		foreach($customFields as $field){
 			$ticket_fields_list_backend=array_merge($ticket_fields_list_backend,array($field->id));
@@ -849,10 +855,10 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
 		);
 		$wpsp_et_reply_ticket=array(
 				'reply_subject'=>'{ticket_subject}',
-				'reply_body'=>'<strong>{reply_by_name} ({reply_by_email})</strong> wrote:
+				'reply_body'=>__('<strong>{reply_by_name} ({reply_by_email})</strong> wrote:
 								<p>{reply_description}</p>
 								<br />
-								<br />',
+								<br />','wp-support-plus-responsive-ticket-system'),
 				'templates'=>$templates,
 				'notify_to'=>$notify_to
 		);
@@ -863,12 +869,15 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
             $wpsp_et_reply_ticket['templates']['ticket_url']=__("Ticket URL", 'wp-support-plus-responsive-ticket-system' );
             update_option('wpsp_et_reply_ticket',$wpsp_et_reply_ticket);
         }
-       
         $wpsp_et_reply_ticket['templates']['reply_description']=__("Reply Description", 'wp-support-plus-responsive-ticket-system' );
         update_option('wpsp_et_reply_ticket',$wpsp_et_reply_ticket);
-        
         if(!isset($wpsp_et_reply_ticket['templates']['time_created'])){
             $wpsp_et_reply_ticket['templates']['time_created']=__("Ticket Created", 'wp-support-plus-responsive-ticket-system' );
+            update_option('wpsp_et_reply_ticket',$wpsp_et_reply_ticket);
+        }
+        if(isset($wpsp_et_reply_ticket['templates']['ticket_priotity'])){
+            unset($wpsp_et_reply_ticket['templates']['ticket_priotity']);
+            $wpsp_et_reply_ticket['templates']['ticket_priority']=__("Ticket Priority", 'wp-support-plus-responsive-ticket-system' );
             update_option('wpsp_et_reply_ticket',$wpsp_et_reply_ticket);
         }
 	/*
@@ -899,7 +908,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
                 'ticket_description' => __("Ticket Description", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_status' => __("Ticket Status", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_category' => __("Ticket Category", 'wp-support-plus-responsive-ticket-system' ),
-                'ticket_priotity' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' ),
+                'ticket_priority' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_url'=>__("Ticket URL", 'wp-support-plus-responsive-ticket-system' ),
                 'updated_by'=>__("User who changed status", 'wp-support-plus-responsive-ticket-system' )
             );
@@ -907,21 +916,26 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
                 $templates['cust'.$field->id]=$field->label;
             }
             $wpsp_et_change_ticket_status['mail_subject']='{ticket_subject}';
-            $wpsp_et_change_ticket_status['mail_body']='<strong>Below are details of ticket:</strong><br />
+            $wpsp_et_change_ticket_status['mail_body']=__('<strong>Below are details of ticket:</strong><br />
                     <br />
                     ------------------------------------------------------------------------------------------------------------------------------------<br />
                     <strong>Subject:</strong> {ticket_subject}<br />
                     <strong>Status:</strong> {ticket_status}<br />
                     <strong>Category:</strong> {ticket_category}<br />
-                    <strong>Priority:</strong> {ticket_priotity}<br />
+                    <strong>Priority:</strong> {ticket_priority}<br />
                     ------------------------------------------------------------------------------------------------------------------------------------<br />
                     <strong>Description:</strong><br />
-                    {ticket_description}';
+                    {ticket_description}','wp-support-plus-responsive-ticket-system');
             $wpsp_et_change_ticket_status['templates']=$templates;
             update_option('wpsp_et_change_ticket_status',$wpsp_et_change_ticket_status);
         }
         if(!isset($wpsp_et_change_ticket_status['templates']['time_created'])){
             $wpsp_et_change_ticket_status['templates']['time_created']=__("Ticket Created", 'wp-support-plus-responsive-ticket-system' );
+            update_option('wpsp_et_change_ticket_status',$wpsp_et_change_ticket_status);
+        }
+        if(isset($wpsp_et_change_ticket_status['templates']['ticket_priotity'])){
+            unset($wpsp_et_change_ticket_status['templates']['ticket_priotity']);
+            $wpsp_et_change_ticket_status['templates']['ticket_priority']=__("Ticket Priority", 'wp-support-plus-responsive-ticket-system' );
             update_option('wpsp_et_change_ticket_status',$wpsp_et_change_ticket_status);
         }
 	/*
@@ -952,7 +966,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
                 'ticket_description' => __("Ticket Description", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_status' => __("Ticket Status", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_category' => __("Ticket Category", 'wp-support-plus-responsive-ticket-system' ),
-                'ticket_priotity' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' ),
+                'ticket_priority' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_url'=>__("Ticket URL", 'wp-support-plus-responsive-ticket-system' ),
                 'updated_by'=>__("User who assigned ticket", 'wp-support-plus-responsive-ticket-system' ),
                 'old_assigned_to'=>__("User to whom assigned ticket before", 'wp-support-plus-responsive-ticket-system' ),
@@ -961,23 +975,28 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
             foreach($customFields as $field){
                 $templates['cust'.$field->id]=$field->label;
             }
-            $wpsp_et_change_ticket_assign_agent['mail_subject']='{updated_by} assigned ticket to {new_assigned_to}';
-            $wpsp_et_change_ticket_assign_agent['mail_body']='<strong>Below are details of ticket:</strong><br />
+            $wpsp_et_change_ticket_assign_agent['mail_subject']=__('{updated_by} assigned ticket to {new_assigned_to}','wp-support-plus-responsive-ticket-system');
+            $wpsp_et_change_ticket_assign_agent['mail_body']=__('<strong>Below are details of ticket:</strong><br />
                     <br />
                     ------------------------------------------------------------------------------------------------------------------------------------<br />
                     <strong>Subject:</strong> {ticket_subject}<br />
                     <strong>Status:</strong> {ticket_status}<br />
                     <strong>Category:</strong> {ticket_category}<br />
-                    <strong>Priority:</strong> {ticket_priotity}<br />
+                    <strong>Priority:</strong> {ticket_priority}<br />
                     <strong>Previously Assigned:</strong> {old_assigned_to}<br />
                     ------------------------------------------------------------------------------------------------------------------------------------<br />
                     <strong>Description:</strong><br />
-                    {ticket_description}';
+                    {ticket_description}','wp-support-plus-responsive-ticket-system');
             $wpsp_et_change_ticket_assign_agent['templates']=$templates;
             update_option('wpsp_et_change_ticket_assign_agent',$wpsp_et_change_ticket_assign_agent);
         }
         if(!isset($wpsp_et_change_ticket_assign_agent['templates']['time_created'])){
             $wpsp_et_change_ticket_assign_agent['templates']['time_created']=__("Ticket Created", 'wp-support-plus-responsive-ticket-system' );
+            update_option('wpsp_et_change_ticket_assign_agent',$wpsp_et_change_ticket_assign_agent);
+        }
+        if(isset($wpsp_et_change_ticket_assign_agent['templates']['ticket_priotity'])){
+            unset($wpsp_et_change_ticket_assign_agent['templates']['ticket_priotity']);
+            $wpsp_et_change_ticket_assign_agent['templates']['ticket_priority']=__("Ticket Priority", 'wp-support-plus-responsive-ticket-system' );
             update_option('wpsp_et_change_ticket_assign_agent',$wpsp_et_change_ticket_assign_agent);
         }
 	/*
@@ -1008,28 +1027,33 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
                 'ticket_description' => __("Ticket Description", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_status' => __("Ticket Status", 'wp-support-plus-responsive-ticket-system' ),
                 'ticket_category' => __("Ticket Category", 'wp-support-plus-responsive-ticket-system' ),
-                'ticket_priotity' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' ),
+                'ticket_priority' => __("Ticket Priority", 'wp-support-plus-responsive-ticket-system' ),
                 'updated_by'=>__("User who assigned ticket", 'wp-support-plus-responsive-ticket-system' )
             );
             foreach($customFields as $field){
                 $templates['cust'.$field->id]=$field->label;
             }
-            $wpsp_et_delete_ticket['mail_subject']='{updated_by} deleted ticket #{ticket_id}';
-            $wpsp_et_delete_ticket['mail_body']='<strong>Below ware details of ticket:</strong><br />
+            $wpsp_et_delete_ticket['mail_subject']=__('{updated_by} deleted ticket #{ticket_id}','wp-support-plus-responsive-ticket-system');
+            $wpsp_et_delete_ticket['mail_body']=__('<strong>Below ware details of ticket:</strong><br />
                     <br />
                     ------------------------------------------------------------------------------------------------------------------------------------<br />
                     <strong>Subject:</strong> {ticket_subject}<br />
                     <strong>Status:</strong> {ticket_status}<br />
                     <strong>Category:</strong> {ticket_category}<br />
-                    <strong>Priority:</strong> {ticket_priotity}<br />
+                    <strong>Priority:</strong> {ticket_priority}<br />
                     ------------------------------------------------------------------------------------------------------------------------------------<br />
                     <strong>Description:</strong><br />
-                    {ticket_description}';
+                    {ticket_description}','wp-support-plus-responsive-ticket-system');
             $wpsp_et_delete_ticket['templates']=$templates;
             update_option('wpsp_et_delete_ticket',$wpsp_et_delete_ticket);
         }
-    if(!isset($wpsp_et_delete_ticket['templates']['time_created'])){
+        if(!isset($wpsp_et_delete_ticket['templates']['time_created'])){
             $wpsp_et_delete_ticket['templates']['time_created']=__("Ticket Created", 'wp-support-plus-responsive-ticket-system' );
+            update_option('wpsp_et_delete_ticket',$wpsp_et_delete_ticket);
+        }
+        if(isset($wpsp_et_delete_ticket['templates']['ticket_priotity'])){
+            unset($wpsp_et_delete_ticket['templates']['ticket_priotity']);
+            $wpsp_et_delete_ticket['templates']['ticket_priority']=__("Ticket Priority", 'wp-support-plus-responsive-ticket-system' );
             update_option('wpsp_et_delete_ticket',$wpsp_et_delete_ticket);
         }
 	/*
@@ -1299,7 +1323,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
         }
         $FrontEndDisplaySettings=get_option( 'wpsp_front_end_display_settings' );
  	if(!isset($FrontEndDisplaySettings['front_end_display_alice'][13])){
- 	        $FrontEndDisplaySettings['front_end_display_alice'][13]=__('Change Raised By','wp-support-plus-responsive');
+ 	        $FrontEndDisplaySettings['front_end_display_alice'][13]=__('Change Raised By','wp-support-plus-responsive-ticket-system');
                 update_option('wpsp_front_end_display_settings',$FrontEndDisplaySettings);
         }
         
@@ -1365,7 +1389,7 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
         $FrontEndDisplaySettings=get_option( 'wpsp_front_end_display_settings' );
 	if(!isset($FrontEndDisplaySettings['front_end_display_alice'][14]))
 	{
-               $FrontEndDisplaySettings['front_end_display_alice'][14]=__('Restore Ticket','wp-support-plus-responsive');
+               $FrontEndDisplaySettings['front_end_display_alice'][14]=__('Restore Ticket','wp-support-plus-responsive-ticket-system');
                update_option('wpsp_front_end_display_settings',$FrontEndDisplaySettings);
         }
         
@@ -1385,6 +1409,17 @@ if ( current_filter() != 'plugins_loaded' || $installed_version != WPSP_VERSION 
         if(!isset($generalSettings['wpsp_delete_tickets_permanantly'])){
             $generalSettings['wpsp_delete_tickets_permanantly']=1;
             update_option('wpsp_general_settings',$generalSettings);
+        }
+        
+        $advancedSettings=get_option('wpsp_advanced_settings' );
+        if(!isset($advancedSettings['hide_selected_status_ticket_frontend'])){
+            $advancedSettings['hide_selected_status_ticket_frontend']=array();
+            $status=$advancedSettings['hide_selected_status_ticket'];
+            if($status!='none'){
+                $getstatus=$wpdb->get_var("SELECT id FROM {$wpdb->prefix}wpsp_custom_status WHERE name='".$status."'");
+                $advancedSettings['hide_selected_status_ticket_frontend']=array($getstatus);
+            }
+            update_option('wpsp_advanced_settings',$advancedSettings);
         }
 }
 

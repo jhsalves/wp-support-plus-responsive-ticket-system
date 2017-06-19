@@ -30,7 +30,8 @@ if ($cu->has_cap('manage_options')) {
                         'close_ticket_btn_status_val'=>$_POST['close_ticket_btn_status'],
                         'close_btn_alice'=>$_POST['close_btn_alice'],
                         'enable_register_guest_user'=>$_POST['enable_register_guest_user'],
-                        'guest_user_role'=>$_POST['guest_user_role']
+                        'guest_user_role'=>$_POST['guest_user_role'],
+                        'allow_agents_to_edit_tickets'=>$_POST['allow_agents_to_edit_tickets']
 	);
 	/* END CLOUGH I.T. SOLUTIONS MODIFICATION
 	 */

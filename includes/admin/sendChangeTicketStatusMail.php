@@ -21,8 +21,8 @@ $ignore_emails=explode("\n",$emailSettings['ignore_emails']);
  * prepare email templete mail
  */
 
-$et_success_staff_subject='['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system').' '.$advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.']'.' '.stripslashes($wpsp_et_change_ticket_status['mail_subject']);
-$et_staff_body=stripslashes($wpsp_et_change_ticket_status['mail_body']);
+$et_success_staff_subject='['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system').' '.$advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.']'.' '.__(stripslashes($wpsp_et_change_ticket_status['mail_subject']),'wp-support-plus-responsive-ticket-system');
+$et_staff_body=__(stripslashes($wpsp_et_change_ticket_status['mail_body']),'wp-support-plus-responsive-ticket-system');
 
 /*
  * Create ticket link
@@ -40,6 +40,9 @@ $ticket = $wpdb->get_row( $sql );
 
 $sql="select body FROM {$wpdb->prefix}wpsp_ticket_thread WHERE ticket_id=".$ticket_id.' ORDER BY create_time ASC';
 $thread=$wpdb->get_row($sql);
+
+$sql="select * FROM {$wpdb->prefix}wpsp_custom_priority WHERE name="."'$ticket->priority'";
+$cust_priority = $wpdb->get_row($sql);
 
 $customFields = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_custom_fields" );
 $etCustomField=array();
@@ -96,9 +99,9 @@ foreach ($wpsp_et_change_ticket_status['templates'] as $et_key=>$et_val){
             $et_success_staff_subject = str_replace('{ticket_category}', __($category->name,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
             $et_staff_body = str_replace('{ticket_category}', __($category->name,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
             break;
-        case 'ticket_priotity':
-            $et_success_staff_subject = str_replace('{ticket_priotity}', __($priority,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
-            $et_staff_body = str_replace('{ticket_priotity}', __($priority,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
+        case 'ticket_priority':
+            $et_success_staff_subject = str_replace('{ticket_priority}', __($cust_priority->name,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
+            $et_staff_body = str_replace('{ticket_priority}', __($cust_priority->name,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
             break;
         case 'updated_by':
             $et_success_staff_subject = str_replace('{updated_by}', $current_user->display_name, $et_success_staff_subject);
@@ -195,7 +198,7 @@ if($emailSettings['enable_email_pipe'] && $emailSettings['piping_type']=='cpanel
     }
 }
 
-$notifyCustomer=apply_filters('wpsp_notify_customer_status_change',true,$ticket);
+$notifyCustomer=apply_filters('wpsp_notify_customer_status_change',true,$ticket,$status);
 if($wpsp_et_change_ticket_status['notify_to']['customer'] && $current_user->user_email!=$customerEmail && $notifyCustomer){
     $to[]=$customerEmail;
 }
@@ -296,12 +299,14 @@ foreach ($to as $key=>$val){
 
 //error_log(PHP_EOL.'To emails in ticket change status:'.PHP_EOL.implode(PHP_EOL, $to));
 //error_log(PHP_EOL.'Headers in ticket change status:'.PHP_EOL.implode(PHP_EOL, $headers));
+//error_log($et_success_staff_subject);
+//error_log($et_staff_body);
 if($to && ( !isset( $_POST['notify'] ) || ( isset( $_POST['notify']) && $_POST['notify'] == '1' ) )){
-    $headers=apply_filters('wpsp_after_send_staff_email_in_setchangeticketstatus_template',$headers,$ticket,$piping_emails,$ignore_emails);
+    $headers=apply_filters('wpsp_after_send_staff_email_in_setchangeticketstatus_template',$headers,$ticket,$piping_emails,$ignore_emails,$status);
+    $to=apply_filters('wpsp_to_email_in_setchangeticketstatus_template',$to,$headers,$ticket,$piping_emails,$ignore_emails,$status);
     wp_mail($to,$et_success_staff_subject,$et_staff_body,$headers);
     add_filter('wp_mail_content_type',create_function('', 'return "text/plain"; '));
 }
 /* END CLOUGH I.T. SOLUTIONS MODIFICATION
  */
-
-do_action('wpsp_after_change_ticket_status');
+do_action('wpsp_after_change_ticket_status',$status,$ticket);

@@ -139,12 +139,9 @@ if(($cu->has_cap('manage_support_plus_agent') && $cu->has_cap('manage_support_pl
 					}
 					if($total_statusses)
 					{
-						foreach($custom_statusses as $custom_status){?>
-                                                    <?php if($custom_status->name!=$advancedSettings['hide_selected_status_ticket']){?>
-							<option value="<?php echo strtolower($custom_status->name)?>" <?php echo ($user_filter['filter_by_status_front']==strtolower($custom_status->name))?'selected="selected"':'';?>><?php _e(ucfirst($custom_status->name),'wp-support-plus-responsive-ticket-system');?></option>
-                                                    <?php }?>    
-						<?php
-						}
+                                            foreach($custom_statusses as $custom_status){?>
+                                                    <option value="<?php echo strtolower($custom_status->name)?>" <?php echo ($user_filter['filter_by_status_front']==strtolower($custom_status->name))?'selected="selected"':'';?>><?php _e(ucfirst($custom_status->name),'wp-support-plus-responsive-ticket-system');?></option>
+                                        <?php }
 					}
 					?>
 				</select>
@@ -221,7 +218,7 @@ foreach ($customFieldsDropDown as $field){
 							$field_options=unserialize($field->field_options);
 						}
 						foreach ($field_options as $field_option_key=>$field_option_value){
-							$selected=($user_filter['cust'.$field->id]==$field_option_key)?'selected="selected"':'';
+							$selected=($user_filter['cust'.$field->id]==$field_option_key && $user_filter['cust'.$field->id]!='all')?'selected="selected"':'';
 							echo '<option value="'.$field_option_key.'" '.$selected.'>'.$field_option_value.'</option>';
 						}
 						?>
@@ -244,7 +241,7 @@ if(($cu->has_cap('manage_support_plus_agent') && $cu->has_cap('manage_support_pl
 				<select id="filter_by_selection_front" name="filter_by_selection_front">
 					<option value="text" <?php echo ($user_filter['filter_by_selection_front']=='text')?'selected="selected"':'';?>><?php _e('Text','wp-support-plus-responsive-ticket-system');?></option>
 					<option value="id" <?php echo ($user_filter['filter_by_selection_front']=='id')?'selected="selected"':'';?>><?php _e('ID','wp-support-plus-responsive-ticket-system');?></option>
-                                        <option value="created_by" <?php echo ($user_filter['filter_by_selection_front']=='created_by')?'selected="selected"':'';?>><?php _e('Created_by','wp-support-plus-responsive');?></option>
+                                        <option value="created_by" <?php echo ($user_filter['filter_by_selection_front']=='created_by')?'selected="selected"':'';?>><?php _e('Created_by','wp-support-plus-responsive-ticket-system');?></option>
 				</select>
 			</td>
 			<td><input type="text" id="filter_by_search_front" name="filter_by_search_front" size="10" placeholder="<?php _e('Search...','wp-support-plus-responsive-ticket-system');?>" /></td>

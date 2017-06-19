@@ -1,5 +1,5 @@
 body{
-	background-color: transparent !important;
+	/*background-color: transparent !important;*/
 }
 #settingsGeneral .settingsGeneralContainer,
 #settingsGeneral .wait,
@@ -87,7 +87,7 @@ body{
     left: 25%;
     top: 15%;
     position: fixed;
-    z-index: 1000001;
+    z-index: 9001;
     border-radius: 5px;
 }
 
@@ -95,7 +95,7 @@ body{
     width: 30px;
     height: 30px;
     position: fixed;
-    z-index: 1000002;
+    z-index: 9002;
     top: 15%;
     left:75%;
     margin-left: -15px;
@@ -107,7 +107,7 @@ body{
     width: 50px;
     height: 50px;
     position: fixed;
-    z-index: 1000002;
+    z-index: 9002;
     top: 50%;
     left:50%;
     margin-left: -25px;
@@ -211,6 +211,9 @@ body{
     text-align: center !important;font-size: 12px;
     display: none !important;
 }
+.unclickableAccBody{
+    display: none !important;
+}
 #wpsp_front_popup{
     width: 100%;
     height: 100%;
@@ -219,7 +222,7 @@ body{
     top: 0;
     left: 0;
     position: fixed;
-    z-index: 1000000;
+    z-index: 9000;
 }
 
 #wpsp_front_popup_inner{
@@ -229,7 +232,7 @@ body{
     left: 25%;
     top: 15%;
     position: fixed;
-    z-index: 1000001;
+    z-index: 9001;
     border-radius: 5px;
 }
 
@@ -237,7 +240,7 @@ body{
     width: 30px;
     height: 30px;
     position: fixed;
-    z-index: 1000002;
+    z-index: 9002;
     top: 15%;
     left:75%;
     margin-left: -15px;
@@ -249,7 +252,7 @@ body{
     width: 50px;
     height: 50px;
     position: fixed;
-    z-index: 1000002;
+    z-index: 9002;
     top: 50%;
     left:50%;
     margin-left: -25px;
@@ -293,4 +296,65 @@ body{
     font-size: 16px;
     margin-right: 20px;
     text-decoration: none;
+}
+.wpsp_stats_box {
+    display: inline-block;
+    list-style: outside none none;
+    margin-left: 0;
+    margin-top: 20px;
+    padding: 0;
+}
+.wpsp_stats_box li {
+    background: #eee none repeat scroll 0 0;
+    box-shadow: 0 0 0 1px #f8f8f8 inset, 0 0 0 1px #cccccc;
+    display: inline-block;
+    float: left;
+    line-height: 18px;
+    margin: 0 10px 10px;
+    padding: 0 10px 0 0;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.wpsp_stat_count {
+    border-right: 1px solid #dcdcdc;
+    box-shadow: 1px 0 0 0 #fff;
+    float: left;
+    line-height: 52px;
+    margin-right: 12px;
+    min-width: 50px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+}
+.wpsp_stats_box .wpsp_stat_text {
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 28px;
+    min-width: 150px;
+    padding: 9px 10px 7px 0;
+    position: relative;
+    text-align: left;
+}
+.wpsp_statistics {
+    padding: 15px 5px;
+}
+
+.wpsp_support_backup {
+    background-color: #bde5f8;
+    font-family: sans-serif;
+    margin: 5px;
+    padding: 10px;
+    color: #00529b;
+    border-radius: 5px;
+}
+.wpsp_support_backup ul,li{
+    margin-bottom:2px;
+}
+.wpsp_support_backup ul{
+    list-style:inside none disc;
+}
+.unclickableAcc{
+    font-size: 20px;
+
 }

@@ -56,7 +56,7 @@ if( !$isError ){
     );
     $wpdb->insert($wpdb->prefix.'wpsp_attachments',$values);
     $attachment_id= $wpdb->insert_id;
-    $errorMessege=__('done','wp-support-plus-responsive');
+    $errorMessege=__('done','wp-support-plus-responsive-ticket-system');
 }
 
 $isError=($isError)?'1':'0';

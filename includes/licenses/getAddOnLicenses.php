@@ -50,6 +50,68 @@ $license_flag=true;
         $license_flag=false;
     }
     
+    if(class_exists('WPSP_STICK_TICKET')){
+        $license_key=get_option('wpsp_license_key_stickticket');
+        ?>
+        <tr>
+            <td><?php _e('Stick Tickets','wp-support-plus-responsive-ticket-system');?></td>
+            <td>
+                <input type="text" id="wpsp_lisense_txt_stickticket" class="wpsp_lisense_txt" value="<?php echo $license_key;?>">
+                <?php if(!$license_key){?>
+                <button onclick="wpsp_act_license('stickticket',7580)"><?php _e('Save & Activate','wp-support-plus-responsive-ticket-system');?></button>
+                <?php } else {?>
+                        <button onclick="wpsp_dact_license('stickticket',7580,'<?php echo $license_key;?>')"><?php _e('Deactivate','wp-support-plus-responsive-ticket-system');?></button>
+                <?php }?>
+                <img id="wpsp_license_ajax_loading_stickticket" class="wpsp_license_ajax_loading" src="<?php echo WCE_PLUGIN_URL.'asset/images/loading_small.gif';?>"/><br>
+                <div id="wpsp_license_error_div_stickticket" class="wpsp_license_error_div"></div>
+            </td>
+            <td>
+                <?php if(!$license_key){?>
+                        <?php _e('Inactive','wp-support-plus-responsive-ticket-system');?>
+                <?php } else {?>
+                        <script type="text/javascript">
+                            wpsp_check_license_status.push(['stickticket',7580,'<?php echo $license_key;?>']);
+                        </script>
+                        <div id="wpsp_lic_status_stickticket" class="wpsp_lic_status"></div>
+                        <img id="wpsp_lic_status_ajax_img_stickticket" class="wpsp_lic_status_ajax_img" src="<?php echo WCE_PLUGIN_URL.'asset/images/loading_small.gif';?>"/>
+                <?php }?>
+            </td>
+        </tr>
+        <?php
+        $license_flag=false;
+    }
+    
+    if(class_exists('WPSP_CONDITIONAL_AGENT_ASSIGN')){
+        $license_key=get_option('wpsp_license_key_condagentassign');
+        ?>
+        <tr>
+            <td><?php _e('Conditional Agent Assign','wp-support-plus-responsive-ticket-system');?></td>
+            <td>
+                <input type="text" id="wpsp_lisense_txt_condagentassign" class="wpsp_lisense_txt" value="<?php echo $license_key;?>">
+                <?php if(!$license_key){?>
+                <button onclick="wpsp_act_license('condagentassign',7586)"><?php _e('Save & Activate','wp-support-plus-responsive-ticket-system');?></button>
+                <?php } else {?>
+                        <button onclick="wpsp_dact_license('condagentassign',7586,'<?php echo $license_key;?>')"><?php _e('Deactivate','wp-support-plus-responsive-ticket-system');?></button>
+                <?php }?>
+                <img id="wpsp_license_ajax_loading_condagentassign" class="wpsp_license_ajax_loading" src="<?php echo WCE_PLUGIN_URL.'asset/images/loading_small.gif';?>"/><br>
+                <div id="wpsp_license_error_div_condagentassign" class="wpsp_license_error_div"></div>
+            </td>
+            <td>
+                <?php if(!$license_key){?>
+                        <?php _e('Inactive','wp-support-plus-responsive-ticket-system');?>
+                <?php } else {?>
+                        <script type="text/javascript">
+                            wpsp_check_license_status.push(['condagentassign',7586,'<?php echo $license_key;?>']);
+                        </script>
+                        <div id="wpsp_lic_status_condagentassign" class="wpsp_lic_status"></div>
+                        <img id="wpsp_lic_status_ajax_img_condagentassign" class="wpsp_lic_status_ajax_img" src="<?php echo WCE_PLUGIN_URL.'asset/images/loading_small.gif';?>"/>
+                <?php }?>
+            </td>
+        </tr>
+        <?php
+        $license_flag=false;
+    }
+    
     if(class_exists('WPSupportPlusWoocommerce')){
         $license_key=get_option('wpsp_license_key_woo');
         ?>

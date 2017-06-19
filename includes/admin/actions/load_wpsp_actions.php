@@ -135,7 +135,16 @@ if (is_admin()) {
     add_action('wp_ajax_wpsp_delete_canned_reply',array($ajax,'wpsp_delete_canned_reply'));
     add_action('wp_ajax_wpsp_edit_thread',array($ajax,'wpsp_edit_thread'));     
     add_action('wp_ajax_setEditThread',array($ajax,'setEditThread'));
-    
+    add_action( 'wp_ajax_getTicketStatistics', array( $ajax, 'getTicketStatistics' ) );
+    //add_action( 'wp_ajax_wpsp_filter_ticket_list_by_stats', array( $ajax, 'wpsp_filter_ticket_list_by_stats' ) );
+    //add_action( 'wp_ajax_nopriv_wpsp_filter_ticket_list_by_stats', array( $ajax, 'wpsp_filter_ticket_list_by_stats' ) );
+    add_action( 'wp_ajax_wpspgetFrontDashboardStatistics', array( $ajax, 'wpspgetFrontDashboardStatistics' ) );
+    add_action( 'wp_ajax_resetETCreateNewTicket', array( $ajax, 'resetETCreateNewTicket' ) );
+    add_action( 'wp_ajax_resetETReplyTicket', array( $ajax, 'resetETReplyTicket' ) );
+    add_action( 'wp_ajax_resetETChangeTicketStatus', array( $ajax, 'resetETChangeTicketStatus' ) );
+    add_action( 'wp_ajax_resetETAssignAgent', array( $ajax, 'resetETAssignAgent' ) );
+    add_action( 'wp_ajax_resetETDeleteTicket', array( $ajax, 'resetETDeleteTicket' ) );
+    add_action( 'wp_ajax_setwpspSettingsBackup', array( $ajax, 'setwpspSettingsBackup'));
 } else {
     
 }

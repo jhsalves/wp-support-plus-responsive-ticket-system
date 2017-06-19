@@ -43,8 +43,8 @@ add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
  * prepare email templete mail
  */
 
-$et_success_staff_subject='['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system').' '.$advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.'] '.stripslashes($wpsp_et_change_ticket_assign_agent['mail_subject']);
-$et_staff_body=stripslashes($wpsp_et_change_ticket_assign_agent['mail_body']);
+$et_success_staff_subject='['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system').' '.$advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.'] '.__(stripslashes($wpsp_et_change_ticket_assign_agent['mail_subject']),'wp-support-plus-responsive-ticket-system');
+$et_staff_body=__(stripslashes($wpsp_et_change_ticket_assign_agent['mail_body']),'wp-support-plus-responsive-ticket-system');
 
 $sql="select * FROM {$wpdb->prefix}wpsp_ticket WHERE id=".$ticket_id;
 $ticket=$wpdb->get_row($sql);
@@ -52,7 +52,8 @@ $ticket=$wpdb->get_row($sql);
 $sql="select name FROM {$wpdb->prefix}wpsp_catagories WHERE id=".$ticket->cat_id;
 $category = $wpdb->get_row($sql);
 
-
+$sql="select * FROM {$wpdb->prefix}wpsp_custom_priority WHERE name="."'$ticket->priority'";
+$priority = $wpdb->get_row($sql);
 /*
  * Create ticket link
  */
@@ -161,9 +162,9 @@ foreach ($wpsp_et_change_ticket_assign_agent['templates'] as $et_key=>$et_val){
             $et_success_staff_subject = str_replace('{ticket_category}', __($category->name,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
             $et_staff_body = str_replace('{ticket_category}', __($category->name,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
             break;
-        case 'ticket_priotity':
-            $et_success_staff_subject = str_replace('{ticket_priotity}', __($ticket->priority,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
-            $et_staff_body = str_replace('{ticket_priotity}', __($ticket->priority,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
+        case 'ticket_priority':
+            $et_success_staff_subject = str_replace('{ticket_priority}', __($priority->name,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
+            $et_staff_body = str_replace('{ticket_priority}', __($priority->name,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
             break;
         case 'updated_by':
             $et_success_staff_subject = str_replace('{updated_by}', $current_user->display_name, $et_success_staff_subject);
@@ -348,14 +349,13 @@ foreach ($to as $key=>$val){
 
 //error_log(PHP_EOL.'To emails in ticket assignment:'.PHP_EOL.implode(PHP_EOL, $to));
 //error_log(PHP_EOL.'Headers in ticket assignment:'.PHP_EOL.implode(PHP_EOL, $headers));
-
+//error_log('Subject:'.PHP_EOL.$et_success_staff_subject);
+//error_log('Body:'.PHP_EOL.$et_staff_body);
 if($to){
     $emailAttachments=apply_filters('wpsp_emailattachment_in_setticketassignmentemail_template',$emailAttachments,$ticket,$to,$headers);
 	$headers=apply_filters('wpsp_after_send_staff_email_in_setticketassignment_template',$headers,$ticket,$piping_emails,$ignore_emails,$emailAttachments);
     wp_mail($to,$et_success_staff_subject,$et_staff_body,$headers,$emailAttachments);
     add_filter('wp_mail_content_type',create_function('', 'return "text/plain"; '));
 } 
-
-
 do_action('wpsp_after_assign_ticket_to_agent');
 ?>

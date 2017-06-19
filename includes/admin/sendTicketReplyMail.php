@@ -28,8 +28,8 @@ foreach ($customFields as $field) {
     }
 }
 
-$et_success_staff_subject = stripslashes($wpsp_et_reply_ticket['reply_subject']);
-$et_staff_body = stripslashes($wpsp_et_reply_ticket['reply_body']);
+$et_success_staff_subject = __(stripslashes($wpsp_et_reply_ticket['reply_subject']),'wp-support-plus-responsive-ticket-system');
+$et_staff_body = __(stripslashes($wpsp_et_reply_ticket['reply_body']),'wp-support-plus-responsive-ticket-system');
 
 $signature = '';
 if ($reply->thread_user_id && $reply->thread_user_object->has_cap('manage_support_plus_ticket')) {
@@ -44,8 +44,10 @@ $etCategoryName = __($etCategoryName, 'wp-support-plus-responsive-ticket-system'
 $description = htmlspecialchars_decode($reply->reply_body, ENT_QUOTES);
 $description = apply_filters('wpsp_et_reply_description', $description, $reply->ticket);
 $priority = __($reply->priority, 'wp-support-plus-responsive-ticket-system');
-$wpsp_subject = stripslashes(htmlspecialchars_decode($reply->ticket->subject, ENT_QUOTES));
+$sql="select * FROM {$wpdb->prefix}wpsp_custom_priority WHERE name="."'$reply->priority'";
+$cust_priority = $wpdb->get_row($sql);
 
+$wpsp_subject = stripslashes(htmlspecialchars_decode($reply->ticket->subject, ENT_QUOTES));
 $customerName = '';
 $customerEmail = '';
 if ($reply->ticket->created_by) {
@@ -57,8 +59,7 @@ if ($reply->ticket->created_by) {
     $customerEmail = $reply->ticket->guest_email;
 }
 
-$ticketStatus = __(ucfirst($reply->ticket->status), 'wp-support-plus-responsive-ticket-system');
-
+$ticketStatus = __($reply->status, 'wp-support-plus-responsive-ticket-system');
 foreach ($wpsp_et_reply_ticket['templates'] as $et_key => $et_val) {
     switch ($et_key) {
         case 'reply_by_name':
@@ -97,9 +98,9 @@ foreach ($wpsp_et_reply_ticket['templates'] as $et_key => $et_val) {
             $et_success_staff_subject = str_replace('{ticket_category}', $etCategoryName, $et_success_staff_subject);
             $et_staff_body = str_replace('{ticket_category}', $etCategoryName, $et_staff_body);
             break;
-        case 'ticket_priotity':
-            $et_success_staff_subject = str_replace('{ticket_priotity}', $priority, $et_success_staff_subject);
-            $et_staff_body = str_replace('{ticket_priotity}', $priority, $et_staff_body);
+        case 'ticket_priority':
+            $et_success_staff_subject = str_replace('{ticket_priority}', $cust_priority->name, $et_success_staff_subject);
+            $et_staff_body = str_replace('{ticket_priority}', $cust_priority->name, $et_staff_body);
             break;
         case 'ticket_url':
             $et_staff_body = str_replace('{ticket_url}', $wpsp_open_ticket_page_url, $et_staff_body);
@@ -265,7 +266,7 @@ foreach ($to as $key => $val) {
         unset($to[$key]);
     }
 }
-
+  
 //error_log(PHP_EOL.'To emails in reply ticket:'.PHP_EOL.implode(PHP_EOL, $to));
 //error_log(PHP_EOL.'Headers in reply ticket:'.PHP_EOL.implode(PHP_EOL, $headers));
 //error_log('Subject:'.PHP_EOL.$subject);

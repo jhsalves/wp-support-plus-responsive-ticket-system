@@ -10,7 +10,7 @@ $arrayVisible=array(
 $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket_id,$flag_backend_frontend);
 ?>
 <form id="frmThreadReply" onsubmit="wpsp_replyTicketConfirm(event);">
-	<div id="theadReplyContainer">
+        <div id="theadReplyContainer">
 		<textarea id="replyBody" name="replyBody"></textarea>
 		<?php
 		/* BEGIN CLOUGH I.T. SOLUTIONS MODIFICATION
@@ -20,13 +20,13 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
 		<div class="replyFloatedContainer">
                     <?php if($FrontEndDisplaySettings['wpsp_hideCC']|| $flag_backend_frontend){?>
 		    <div class="replyCC" id="wpsp_replycc">
-		        <span class="label label-info wpsp_title_label"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][5]);?></span> (<?php _e('Comma separated list','wp-support-plus-responsive-ticket-system');?>)<br>
+		        <span class="label label-info wpsp_title_label"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][5],'wp-support-plus-responsive-ticket-system');?></span> (<?php _e('Comma separated list','wp-support-plus-responsive-ticket-system');?>)<br>
 		        <input type="text" name="reply_cc" id="reply_cc" />
 		    </div>
                     <?php }?>
                     <?php if($FrontEndDisplaySettings['wpsp_hideBCC']|| $flag_backend_frontend){?>
 		    <div class="replyCC" id="wpsp_replybcc">
-		        <span class="label label-info wpsp_title_label"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][6]);?></span> (<?php _e('Comma separated list','wp-support-plus-responsive-ticket-system');?>)<br>
+		        <span class="label label-info wpsp_title_label"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][6],'wp-support-plus-responsive-ticket-system');?></span> (<?php _e('Comma separated list','wp-support-plus-responsive-ticket-system');?>)<br>
                         <input type="text" name="reply_bcc" id="reply_bcc" />
 		    </div>
                     <?php }?>
@@ -39,7 +39,7 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
 		<div id="replyFloatedContainer">
 		    <?php if($arrayVisible['replystatus'] && ($FrontEndDisplaySettings['wpsp_hideStatus']|| $flag_backend_frontend)){?>
                         <div class="replyFloatLeft wpsp_reply" id="wpsp_status_reply">
-				<span class="label label-info wpsp_title_label"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][7]);?></span><br>
+				<span class="label label-info wpsp_title_label"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][7],'wp-support-plus-responsive-ticket-system');?></span><br>
 				<select id="reply_ticket_status" name="reply_ticket_status">
 					<?php
 					$sql_status="select * from {$wpdb->prefix}wpsp_custom_status";
@@ -63,10 +63,10 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
 					foreach($custom_statusses as $custom_status){
                                             $reply_status=(strtolower($ticket->status)==strtolower($custom_status->name));
                                             $reply_status=apply_filters('wpsp_reply_status_in_replyformposition',$reply_status,$custom_status);
-                                            ?>
+                                           ?>
 						<option value="<?php echo $custom_status->name ?>" <?php echo $reply_status?'selected="selected"':'';?>><?php _e(ucfirst($custom_status->name),'wp-support-plus-responsive-ticket-system');?></option>
 					<?php
-					}
+                                        }
 					?>
 				</select>
 			</div>
@@ -78,7 +78,7 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
 			{
 			?>
 			<div class="replyFloatLeft wpsp_reply" id="wpsp_category_reply">
-				<span class="label label-info wpsp_title_label"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][8]);?></span><br>
+				<span class="label label-info wpsp_title_label"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][8],'wp-support-plus-responsive-ticket-system');?></span><br>
 				<select id="reply_ticket_category" name="reply_ticket_category">
 					<?php 
 					foreach ($categories as $category){
@@ -97,12 +97,12 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
 			{
 			?>
 			<div class="replyFloatLeft wpsp_reply" id="wpsp_priority_reply">
-				<span class="label label-info wpsp_title_label"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][9]);?></span><br>
+                            <span class="label label-info wpsp_title_label"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][9],'wp-support-plus-responsive-ticket-system');?></span><br>
 				<select id="reply_ticket_priority" name="reply_ticket_priority">
 					<?php 
 					foreach ($priorities as $priority){
 					?>
-						<option value="<?php echo strtolower($priority->name);?>" <?php echo ($ticket->priority==strtolower($priority->name))?'selected="selected"':'';?>><?php _e($priority->name,'wp-support-plus-responsive-ticket-system');?></option>
+						<option value="<?php echo strtolower($priority->name);?>" <?php echo (strtolower($ticket->priority)==strtolower($priority->name))?'selected="selected"':'';?>><?php _e($priority->name,'wp-support-plus-responsive-ticket-system');?></option>
 					<?php
 					}
 					?>
@@ -117,7 +117,7 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
 			{
 			?>
                             <div class="replyFloatLeftFullWidth wpsp_reply" id="wpsp_reply_attachment">
-                                <span class="label label-info wpsp_title_label"><?php printf(__('%s','wp-support-plus-responsive'),$FrontEndDisplaySettings['front_end_display_alice'][10]);?></span><br>
+                                <span class="label label-info wpsp_title_label"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][10],'wp-support-plus-responsive-ticket-system');?></span><br>
                                 <div class="wpsp_frm_attachment_container">
                                     <input type="file" id="wpsp_frm_attachment_input_reply" class="wpsp_frm_attachment_input">
                                     <div id="wpsp_frm_attachment_copy_reply" class="wpsp_frm_attachment" style="display: none;">
@@ -130,9 +130,11 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
                                 </div>
                             </div>
 			<?php
-			}?>
+			}
+                        ?>
 			<input type="hidden" name="action" value="replyTicket">
-			<input type="hidden" name="ticket_id" value="<?php echo $ticket_id;?>">
+                        <?php do_action('wpsp_hidden_field_of_replyticket'); ?>
+                        <input type="hidden" name="ticket_id" value="<?php echo $ticket_id;?>">
 			<input type="hidden" name="user_id" value="<?php echo $current_user->ID;?>">
                         <input type="hidden" name="wpsp_reply_nounce" value="<?php echo wp_create_nonce( 'wpsp-reply?userid='.$current_user->ID.'&ticket_id='.$ticket_id );?>">
 			<input type="hidden" name="type" value="user">
@@ -143,13 +145,13 @@ $arrayVisible=apply_filters('wpsp_reply_form_reply_status',$arrayVisible,$ticket
                             $btnStyle="color:".$FrontEndDisplaySettings['wpsp_an_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_an_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_an_bc'].";margin:3px";
                             ?>
 				<input type="hidden" name="notify" value="true">
-                                <input style="<?php echo $btnStyle;?>" type="button" id="wpsp_add_note_btn" class="btn btn-success replyFloatRight" value="<?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][11]);?>" onClick="addNote()" />
+                                <input style="<?php echo $btnStyle;?>" type="button" id="wpsp_add_note_btn" class="btn btn-success replyFloatRight" value="<?php echo __($FrontEndDisplaySettings['front_end_display_alice'][11],'wp-support-plus-responsive-ticket-system');?>" onClick="addNote()" />
 			<?php
 			}
                         
                         $btnStyle="color:".$FrontEndDisplaySettings['wpsp_sr_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_sr_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_sr_bc'].";margin:3px";
 			?>
-                        <input style="<?php echo $btnStyle;?>" type="submit" id="wpsp_submit_reply_btn" class="btn btn-success replyFloatRight" value="<?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][12]);?>">
+                        <input style="<?php echo $btnStyle;?>" type="submit" id="wpsp_submit_reply_btn" class="btn btn-success replyFloatRight" value="<?php echo __($FrontEndDisplaySettings['front_end_display_alice'][12],'wp-support-plus-responsive-ticket-system');?>">
 		</div>
                 <div class="replyFloatedContainer">
                 <?php

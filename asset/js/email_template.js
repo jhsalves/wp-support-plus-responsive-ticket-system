@@ -211,3 +211,74 @@ function et_get_delete_ticket(){
         });
     });
 }
+
+function wpsp_reset_et_create_new_ticket(event){
+    event.preventDefault();
+    if(confirm(display_ticket_data.sure_to_reset_setting)){
+        var data = {
+                    'action': 'resetETCreateNewTicket'
+        };
+        jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+            et_get_create_new_ticket();
+        });
+    }else{
+        return false;
+    }
+}
+
+function wpsp_reset_et_replyticket(event){
+    event.preventDefault();
+    if(confirm(display_ticket_data.sure_to_reset_setting)){
+        var data = {
+                'action': 'resetETReplyTicket'
+        };
+        jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+            et_get_reply_ticket();
+        });
+    }else{
+        return false;
+    }
+}
+
+function resetETChangeTicketStatus(event){
+    event.preventDefault();
+    if(confirm(display_ticket_data.sure_to_reset_setting)){
+        var data = {
+                    'action': 'resetETChangeTicketStatus'
+        };
+        jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+            et_get_change_ticket_status();
+        });
+    }else{
+        return false;
+    }
+}
+
+function resetETAssignAgent(event){
+    event.preventDefault();
+    if(confirm(display_ticket_data.sure_to_reset_setting)){
+        var data = {
+                    'action': 'resetETAssignAgent'
+        };
+        jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+            et_get_assign_agent();
+        });
+    }else{
+        return false;
+    }
+}
+
+function resetETDeleteTicket(event){
+    event.preventDefault();
+    if(confirm(display_ticket_data.sure_to_reset_setting)){
+        var data = {
+            'action': 'resetETDeleteTicket'
+        };
+        jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+            et_get_delete_ticket();
+        });
+    }else{
+        return false;
+    }
+}
+    

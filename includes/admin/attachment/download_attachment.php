@@ -21,6 +21,7 @@ if($attachment){
             $buffer = fread($fd, $fsize);
             echo $buffer;
         }
+        exit;
     }
     fclose ($fd);
 }

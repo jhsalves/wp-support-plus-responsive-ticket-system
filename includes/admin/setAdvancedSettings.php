@@ -7,6 +7,10 @@ if ($cu->has_cap('manage_options')) {
         if(isset($_POST['hide_selected_status_ticket_backend'])){
             $hide_sel_stat_back=$_POST['hide_selected_status_ticket_backend'];
         }
+        $hide_sel_stat_front=array();
+        if(isset($_POST['hide_selected_status_ticket'])){
+            $hide_sel_stat_front=$_POST['hide_selected_status_ticket'];
+        }
         $modify_raised_by=array();
         if(isset($_POST['modify_raised_by'])){
             $modify_raised_by=$_POST['modify_raised_by'];
@@ -18,7 +22,7 @@ if ($cu->has_cap('manage_options')) {
             'wpsp_reply_form_position'=>$_POST['wpsp_reply_form_position'],
             'wpsp_shortcode_used_in'=>$_POST['wpsp_shortcode_used_in'],
             'enable_accordion'=>$_POST['enable_accordion'],
-            'hide_selected_status_ticket'=>$_POST['hide_selected_status_ticket'],
+            'hide_selected_status_ticket_frontend'=>$hide_sel_stat_front,
             'hide_selected_status_ticket_backend'=>$hide_sel_stat_back,
             'modify_raised_by'=>$modify_raised_by,
             'wpsp_dashboard_menu_label'=>$_POST['wpsp_dashboard_menu_label'],
