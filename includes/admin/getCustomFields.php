@@ -72,7 +72,7 @@ $categories = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_catagories"
 <div id="createCustFieldContainer">
 	<input id="newCustFieldName" class="form-control" type="text" placeholder="<?php _e('Enter New Field Label','wp-support-plus-responsive-ticket-system');?>" >
 	<input type="checkbox" class="form-control" id="newCustRequired"><label class="required_label"><?php _e('Required','wp-support-plus-responsive-ticket-system');?></label><br/>
-        <input type="checkbox" class="form-control" id="newisVarFeild"><label class="required_label"><?php _e('Variable Feild','wp-support-plus-responsive');?></label>
+        <input type="checkbox" class="form-control" id="newisVarFeild"><label class="required_label"><?php _e('Variable Field','wp-support-plus-responsive-ticket-system');?></label>
         <small><i>(<?php _e('If you set custom field as variable field, it will not show on create ticket form, but can be edited by support team for their reference regarding the ticket.','wp-support-plus-responsive-ticket-system');?>)</i></small><br>
 	<?php _e('Field Type','wp-support-plus-responsive-ticket-system');?>:
 	<select id="newFieldType" onchange="select_field_type_options()">
@@ -84,7 +84,7 @@ $categories = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_catagories"
                 <option value="6"><?php _e('Date','wp-support-plus-responsive-ticket-system');?></option>
                 <?php do_action('wpsp_extra_custom_field_create_form')?>
         <?php if(class_exists( 'WooCommerce' ) && class_exists( 'WPSupportPlusWoocommerce' )) {?>
-                <option value="7"><?php _e('Woocommerce Product','wp-support-plus-responsive');?></option>                
+                <option value="7"><?php _e('Woocommerce Product','wp-support-plus-responsive-ticket-system');?></option>                
         <?php }?>
 	</select><br/><br/>
         <span><?php _e('Assign Categories','wp-support-plus-responsive-ticket-system');?></span>
@@ -95,7 +95,7 @@ $categories = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_catagories"
 		}
 		?>
 	</select>
-        <span><small><i>(<?php _e('This custom field will only visible when one of the selected category is choosen in create ticket form. If you want to show this all the time, please leave this empty.','wp-support-plus-responsive');?>)</i></small></span>
+        <span><small><i>(<?php _e('This custom field will only visible when one of the selected category is choosen in create ticket form. If you want to show this all the time, please leave this empty.','wp-support-plus-responsive-ticket-system');?>)</i></small></span>
         <br/><br/>
 	<div id="field_options" style="display:none">
 	<?php _e('Field Options','wp-support-plus-responsive-ticket-system');?>:
@@ -109,7 +109,7 @@ $categories = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_catagories"
 	<input type="hidden" id="editCustFieldID" value="">
 	<input id="editCustFieldName" class="form-control" type="text" >
 	<input type="checkbox" class="form-control" id="editCustRequired"><label class="required_label"><?php _e('Required','wp-support-plus-responsive-ticket-system');?></label><br/>
-        <input type="checkbox" class="form-control" id="editisVarFeild"><label class="required_label"><?php _e('Variable Feild','wp-support-plus-responsive');?></label><br/>
+        <input type="checkbox" class="form-control" id="editisVarFeild"><label class="required_label"><?php _e('Variable Field','wp-support-plus-responsive-ticket-system');?></label><br/>
 	<?php _e('Field Type','wp-support-plus-responsive-ticket-system');?>:
 	<select id="editFieldType" onchange="select_field_type_options_edit()">
 		<option value="1"><?php _e('Text','wp-support-plus-responsive-ticket-system');?></option>
@@ -120,7 +120,7 @@ $categories = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_catagories"
                 <option value="6"><?php _e('Date','wp-support-plus-responsive-ticket-system');?></option>
                 <?php do_action('wpsp_extra_custom_field_edit_form')?>
         <?php if(class_exists( 'WooCommerce' ) && class_exists( 'WPSupportPlusWoocommerce' )) {?>
-                <option value="7"><?php _e('Woocommerce Product','wp-support-plus-responsive');?></option>                
+                <option value="7"><?php _e('Woocommerce Product','wp-support-plus-responsive-ticket-system');?></option>                
         <?php }?>
 	</select><br/><br/>
         <span><?php _e('Assign Categories','wp-support-plus-responsive-ticket-system');?></span>

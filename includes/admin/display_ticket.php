@@ -10,6 +10,7 @@ $advancedSettings=get_option( 'wpsp_advanced_settings' );
 	<li class="active"><a href="#ticketContainer" id="tab_ticket_container" data-toggle="tab"><?php _e($advancedSettings['ticket_label_alice'][2],'wp-support-plus-responsive-ticket-system');?></a></li>
 	<li><a href="#create_ticket" id="tab_create_ticket" data-toggle="tab"><?php _e($advancedSettings['ticket_label_alice'][3],'wp-support-plus-responsive-ticket-system');?></a></li>
 	<li><a href="#agent_settings" id="tab_agent_settings" data-toggle="tab"><?php _e('Agent Settings','wp-support-plus-responsive-ticket-system');?></a></li>
+        <li><a href="#ticket_dashboard" id="tab_ticket_dashboard" data-toggle="tab"><?php _e('Dashboard','wp-support-plus-responsive-ticket-system');?></a></li>
 </ul>
 <!-- Tab panes -->
 <div class="tab-content">
@@ -36,4 +37,17 @@ $advancedSettings=get_option( 'wpsp_advanced_settings' );
 		<div class="wait"><img alt="Please Wait" src="<?php echo WCE_PLUGIN_URL.'asset/images/ajax-loader@2x.gif?ver='.WPSP_VERSION;?>"></div>
 	</div>
 	<!-- Agent Settings Tab Body End Here -->
+        <!-- Ticket Statistics Tab Body Start Here -->
+	<div class="tab-pane" id="ticket_dashboard">
+		<div id="ticket_dashboard_area"></div>
+		<div class="wait"><img alt="Please Wait" src="<?php echo WCE_PLUGIN_URL.'asset/images/ajax-loader@2x.gif?ver='.WPSP_VERSION;?>"></div>
+	</div>
+	<!-- Ticket Statistics Tab Body End Here -->
 </div>
+<script>
+    function wpsp_backend_dashboard_callback(){
+        <?php
+        do_action('wpsp_backend_dashboard_callback');
+        ?>
+    }
+</script>

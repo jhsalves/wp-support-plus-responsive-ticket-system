@@ -70,4 +70,5 @@ foreach ($wpsp_et_delete_ticket['templates'] as $key=>$val){
 	<textarea id='wpsp_et_delete_body' name='wpsp_et_delete_body'><?php echo stripcslashes($wpsp_et_delete_ticket['mail_body']);?></textarea>
 	<hr>
 	<button id="wpsp_save_et_cteate_new_ticket" type="submit" class="btn btn-success"><?php _e("Save Settings", 'wp-support-plus-responsive-ticket-system' );?></button>
+        <button id="wpsp_reset_et_delete_ticket" onclick="resetETDeleteTicket(event);" class="btn btn-success"><?php _e("Reset Settings", 'wp-support-plus-responsive-ticket-system' );?></button>
 </form>

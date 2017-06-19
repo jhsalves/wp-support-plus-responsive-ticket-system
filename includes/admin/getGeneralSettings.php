@@ -264,16 +264,21 @@ $posts=get_posts( array('post_type' => 'post','post_status' => 'publish') );
 <table>
   <tr>
     <td class="tblGeneralStingsTdFirst"><input <?php echo ($generalSettings['allow_agents_to_assign_tickets']==1)?'checked="checked"':'';?> type="checkbox" id="setAgentTicketAssign" /></td>
-    <td class="tblGeneralStingsTdSecond"><?php _e('Allow Agents to assign tickets','wp-support-plus-responsive-ticket-system');?></td>
+    <td class="tblGeneralStingsTdSecond"><?php _e('Allow agents to assign tickets','wp-support-plus-responsive-ticket-system');?></td>
   </tr>
 </table><br>
 <table>
   <tr>
     <td class="tblGeneralStingsTdFirst"><input <?php echo ($generalSettings['allow_agents_to_delete_tickets']==1)?'checked="checked"':'';?> type="checkbox" id="setAgentTicketDelete" /></td>
-    <td class="tblGeneralStingsTdSecond"><?php _e('Allow Agents to delete tickets','wp-support-plus-responsive-ticket-system');?></td>
+    <td class="tblGeneralStingsTdSecond"><?php _e('Allow agents to delete tickets','wp-support-plus-responsive-ticket-system');?></td>
   </tr>
 </table><br>
-
+<table>
+<tr>
+<td class="tblGeneralStingsTdFirst"><input <?php echo ($generalSettings['allow_agents_to_edit_tickets']==1)?'checked="checked"':'';?> type="checkbox" id="setAgentTicketEdit" /></td>
+<td class="tblGeneralStingsTdSecond"><?php _e('Allow agents to edit tickets','wp-support-plus-responsive-ticket-system');?></td>
+ </tr>
+</table>
 <hr>
 <!-------------------------------Code for agent settings end---------------------------------------->
 

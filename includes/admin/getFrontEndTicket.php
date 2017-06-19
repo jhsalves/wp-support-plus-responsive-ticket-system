@@ -96,7 +96,7 @@ foreach ($user_filter as $key => $val){
  * Update 1 - Change Custom Status Color
  * Join custom status color database entry
  */
-$sql="select t.id,t.type,t.subject,t.status,c.name as category,c.id as cat_id,t.assigned_to,t.active,t.priority,t.created_by,t.guest_email,t.guest_name,cs.color,cp.color as pcolor,".$customFieldSql."  
+$sql="select t.id,t.type,t.subject,t.status,c.name as category,c.id as cat_id,t.assigned_to,t.active,t.priority,t.created_by,t.guest_email,t.guest_name,cs.color,cp.color as pcolor,cp.name as pname,".$customFieldSql."  
 		TIMESTAMPDIFF(MONTH,t.update_time,UTC_TIMESTAMP()) as date_modified_month,
 		TIMESTAMPDIFF(DAY,t.update_time,UTC_TIMESTAMP()) as date_modified_day,
 		TIMESTAMPDIFF(HOUR,t.update_time,UTC_TIMESTAMP()) as date_modified_hour,
@@ -119,7 +119,7 @@ if($current_user->has_cap('manage_support_plus_agent') && $current_user->has_cap
 }
 else if(!$current_user->has_cap('manage_support_plus_agent') && $current_user->has_cap('manage_support_plus_ticket'))
 {
-	$where.="(t.assigned_to LIKE '%".$current_user->ID."%' OR t.assigned_to='0' OR t.created_by='".$current_user->ID."' OR t.ticket_type=1) ";
+	$where.="(t.assigned_to RLIKE '(^|,)".$current_user->ID."(,|$)' OR t.assigned_to='0' OR t.created_by='".$current_user->ID."' OR t.ticket_type=1) ";
 }
 else
 {
@@ -128,8 +128,17 @@ else
 
 if(isset($filter_by_status_front) && $filter_by_status_front != 'all' ) {
 	$where .= "AND t.status='" . $filter_by_status_front . "' ";
-}else if($advancedSettings['hide_selected_status_ticket']!='none'){
-        $where .= "AND t.status <> '" . $advancedSettings['hide_selected_status_ticket'] . "' ";
+}else if(isset($filter_by_status_front) && $filter_by_status_front=='all'){
+        $hideStatus = array();
+        $custom_statusses=$wpdb->get_results("select * from {$wpdb->prefix}wpsp_custom_status");
+        if(!empty($advancedSettings['hide_selected_status_ticket_frontend'])){
+            foreach($custom_statusses as $custom_status){
+                if(is_numeric(array_search($custom_status->id,$advancedSettings['hide_selected_status_ticket_frontend']))){
+                        $hideStatus = array_merge($hideStatus,array("'".$custom_status->name."'"));
+                }
+            }
+            $where .= "AND t.status NOT IN (" .implode(',', $hideStatus). ") ";
+        }
 }
 
 if(isset($filter_by_category_front) && $filter_by_category_front!='all'){
@@ -189,7 +198,7 @@ if(isset($filter_by_selection_front)){
  					$user_ids=array_merge($user_ids,array($user->ID));
  				}
  				$where.="AND ( t.id IN (SELECT DISTINCT t.id from {$wpdb->prefix}wpsp_ticket t INNER JOIN {$wpdb->prefix}wpsp_ticket_thread th ON t.id=th.ticket_id WHERE t.created_by IN (".implode(",",$user_ids).")) OR ";
- 				$where.="t.id IN (SELECT DISTINCT t.id from {$wpdb->prefix}wpsp_ticket t INNER JOIN {$wpdb->prefix}wpsp_ticket_thread th ON t.id=th.ticket_id WHERE t.guest_name LIKE '%".$filter_by_search_front."%' OR t.guest_email LIKE'%".$filter_by_search_front."%')) ";
+				$where.="t.id IN (SELECT DISTINCT t.id from {$wpdb->prefix}wpsp_ticket t INNER JOIN {$wpdb->prefix}wpsp_ticket_thread th ON t.id=th.ticket_id WHERE t.guest_name LIKE '%".$filter_by_search_front."%' OR t.guest_email LIKE'%".$filter_by_search_front."%')) ";
  			}
  			else
  			{
@@ -223,6 +232,9 @@ $findTotalRowsSQL="select count(*) "
 $findTotalRowsSQL=apply_filters('wpsp_get_ticket_list_count_frontend_sql',$findTotalRowsSQL);
 
 $totalrows = $wpdb->get_var( $findTotalRowsSQL.$where );
+
+$totalrows=apply_filters('wpsp_get_ticket_list_count_frontend',$totalrows,$findTotalRowsSQL,$where);
+
 $current_page=$page_no+1;
 $total_pages=ceil($totalrows/$filter_by_no_of_ticket_front);
 
@@ -238,7 +250,9 @@ $tickets = $wpdb->get_results( $sql );
 <div class="table-responsive">
 	<table id="tblFontEndTickets" class="table table-striped table-hover">
 	  <tr>
+              
 	<?php 
+                do_action('wpsp_in_table_of_getfrontendticket');
 		foreach($advancedSettingsTicketList['frontend_ticket_list'] as $frontend_ticket_field_key => $frontend_ticket_field_value)
 		{
 			if($frontend_ticket_field_value)
@@ -262,7 +276,7 @@ $tickets = $wpdb->get_results( $sql );
 						case 'sb': ?><th id="wpsp_front_subject"><?php _e($default_labels['ds'],'wp-support-plus-responsive-ticket-system');?></th><?php
 						break;
                                                 case 'rb': if($current_user->has_cap('manage_support_plus_ticket')){
-                                                           ?><th id="wpsp_front_raised_by"><?php _e('Raised By','wp-support-plus-responsive');?></th><?php
+                                                           ?><th id="wpsp_front_raised_by"><?php _e('Raised By','wp-support-plus-responsive-ticket-system');?></th><?php
                                                            }
                                                 break;
 						case 'ct': ?><th id="wpsp_front_category"><?php _e($default_labels['dc'],'wp-support-plus-responsive-ticket-system');?></th><?php
@@ -280,7 +294,7 @@ $tickets = $wpdb->get_results( $sql );
 						case 'udt': ?><th id="wpsp_front_updated"><?php _e('Date Updated','wp-support-plus-responsive-ticket-system');?></th><?php
 						break;
                                             default:                                                     
-                                                do_action('wpsp_add_th_in_ticket_list_for_frontend');                                                    
+                                                do_action('wpsp_add_th_in_ticket_list_for_frontend',$frontend_ticket_field_key);                                                    
                                                 break;
 					}
 				}
@@ -289,6 +303,7 @@ $tickets = $wpdb->get_results( $sql );
 		?>
 	  </tr>
 	  <?php 
+          do_action('wpsp_before_ticket_list_frontend');
 	  foreach ($tickets as $ticket){
 		
 		if(apply_filters('wpsp_check_current_ticket_in_list',false,$ticket,$current_user)){
@@ -338,7 +353,7 @@ $tickets = $wpdb->get_results( $sql );
 		/* END CLOUGH I.T. SOLUTIONS MODIFICATION
 		*/
 		$priority_color='';
-		switch ($ticket->priority){
+                switch ($ticket->priority){
 			case 'high': $priority_color=$ticket->pcolor;break;
 			case 'medium': $priority_color=$ticket->pcolor;break;
 			case 'normal': $priority_color=$ticket->pcolor;break;
@@ -365,7 +380,7 @@ $tickets = $wpdb->get_results( $sql );
                 $css='cursor:pointer';
                 $css=apply_filters('wpsp_ticket_list_tr_style_frontend',$css,$ticket);
 		echo "<tr style='".$css."' onclick='openTicket(".$ticket->id.");'>";
-
+                do_action('wpsp_after_tr_in_frontend',$ticket);
 		foreach($advancedSettingsTicketList['frontend_ticket_list'] as $frontend_ticket_field_key => $frontend_ticket_field_value){
 			if($frontend_ticket_field_value==1){
 				if(is_numeric($frontend_ticket_field_key)){
@@ -402,7 +417,7 @@ $tickets = $wpdb->get_results( $sql );
                                                                                 echo "<td>".__($raised_by,'wp-support-plus-responsive-ticket-system')."</td>";
                                                                         }
 									break;
-						case 'pt': echo "<td class='priority'><span class='label label-".$priority_color."' style='font-size: 13px;background-color:".$priority_color."'>".__(ucfirst($ticket->priority),'wp-support-plus-responsive-ticket-system')."</span></td>";
+						case 'pt': echo "<td class='priority'><span class='label label-".$priority_color."' style='font-size: 13px;background-color:".$priority_color."'>".__(($ticket->pname),'wp-support-plus-responsive-ticket-system')."</span></td>";
 						break;
 						case 'ut': echo "<td>".__($modified,'wp-support-plus-responsive-ticket-system')."</td>";
 						break;
@@ -429,7 +444,7 @@ $tickets = $wpdb->get_results( $sql );
 							echo "<td>".__($udt,'wp-support-plus-responsive-ticket-system')."</td>";
 						break;
                                             default:                                                     
-                                                    do_action('wpsp_add_td_in_ticket_list',$ticket);                                                    
+                                                    do_action('wpsp_add_td_in_ticket_list',$ticket,$frontend_ticket_field_key);                                                    
                                                     break;
 					}
 				}

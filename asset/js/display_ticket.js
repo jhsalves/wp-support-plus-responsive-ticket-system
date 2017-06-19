@@ -87,7 +87,22 @@ jQuery(document).ready(function(){
                         jQuery(window).unbind('beforeunload');
 		});
 	});
+	
+        jQuery('#tab_ticket_dashboard').click(function(){
+            jQuery('#ticket_dashboard #ticket_dashboard_area').hide();
+		jQuery('#ticket_dashboard .wait').show();
 		
+		var data = {
+			'action': 'getTicketStatistics'
+		};
+
+		jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+			jQuery('#ticket_dashboard .wait').hide();
+			jQuery('#ticket_dashboard #ticket_dashboard_area').html(response);
+			jQuery('#ticket_dashboard #ticket_dashboard_area').show();
+			wpsp_backend_dashboard_callback();
+		});
+        })
 });
 
 function wpsp_replyTicket(){	
@@ -708,7 +723,7 @@ function wpsp_change_user(){
  	}
  	else if(user_type==0)
  	{       
-                 jQuery('#user_type_user_front').hide();
+                jQuery('#user_type_user_front').hide();
  		jQuery('#user_type_guest_front').show();
  		jQuery('#wpsp_guest_user_name').addClass('wpsp_required');
  		jQuery('#wpsp_guest_user_email').addClass('wpsp_required');
@@ -908,14 +923,28 @@ function edit_thread(thread_id){
     }); 
 } 
 
-function setEditThread(thread_id,ticket_id){     
-    wpsp_show_front_popup();    
+function setEditThread(thread_id,ticket_id){ 
+    wpsp_show_front_popup();
     var data={             
         'action': 'setEditThread',             
         'thread_id':thread_id,             
         'thread_body':jQuery('#edit_thread').val()     
+    };
+    jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+        wpsp_close_front_popup();
+    });
+    openTicket(ticket_id);
+ 
+}
+
+function wpsp_filter_ticket_list_by_stats(id,user_id){
+    var data={             
+        'action': 'wpsp_filter_ticket_list_by_stats',
+        'type': "POST",
+        'statusid':id,
+        'user_id':user_id
     };        
     jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) { 	    
-            openTicket(ticket_id);
-    }); 
+            getTickets('','');
+    });
 }

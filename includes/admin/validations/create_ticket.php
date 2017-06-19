@@ -1,6 +1,8 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+if(!class_exists('WPSPTicketCreate')) :
+
 class WPSPTicketCreate {
     
     public $id                  = 0;
@@ -71,7 +73,7 @@ class WPSPTicketCreate {
             'guest_name'        => $this->guest_name,
             'guest_email'       => $this->guest_email
         );
-        $values = apply_filters('wpsp_reply_field_ticket_thread_values', $values);
+        $values = apply_filters('wpsp_reply_field_create_ticket_thread_values', $values);
         $wpdb->insert($wpdb->prefix . 'wpsp_ticket_thread', $values);
     }
             
@@ -172,7 +174,8 @@ class WPSPTicketCreate {
     }
     
     function getPriority(){
-        $priority = 'normal';
+        global $wpdb;
+        $priority = $wpdb->get_var("select name from {$wpdb->prefix}wpsp_custom_priority where id=1");
         if(isset($_POST['create_ticket_priority'])){
             $priority = sanitize_text_field($_POST['create_ticket_priority']);
         }
@@ -276,10 +279,13 @@ class WPSPTicketCreate {
                 $this->user_name   = $this->user_object->display_name;
                 $this->user_email  = $this->user_object->user_email;
             } else if( !$this->is_pipe && $generalSettings['enable_register_guest_user'] == 1 ){
-                $this->user_id = register_new_user($this->guest_email, $this->guest_email);
-                $this->user_object = get_user_by( 'email', $this->guest_email );
-                $this->user_type   = 'user';
-                wp_update_user( array( 'ID' => $this->user_id, 'display_name' => $this->guest_name ) );
+                $id=register_new_user($this->guest_email, $this->guest_email);
+                if(!is_wp_error( $id )){
+                    $this->user_id = $id;
+                    $this->user_object = get_user_by('email', $this->guest_email);
+                    $this->user_type = 'user';
+                    wp_update_user(array('ID' => $this->user_id, 'display_name' => $this->guest_name));
+                }
             }
         } else if( isset($_POST['user_id']) && intval($_POST['user_id']) ){
             $this->user_id = intval(sanitize_text_field($_POST['user_id']));
@@ -303,10 +309,13 @@ class WPSPTicketCreate {
                 $this->user_name   = $this->user_object->display_name;
                 $this->user_email  = $this->user_object->user_email;
             } else if( !$this->is_pipe && $generalSettings['enable_register_guest_user'] == 1 ){
-                $this->user_id = register_new_user($this->guest_email, $this->guest_email);
-                $this->user_object = get_user_by( 'email', $this->guest_email );
-                $this->user_type   = 'user';
-                wp_update_user( array( 'ID' => $this->user_id, 'display_name' => $this->guest_name ) );
+                $id = register_new_user($this->guest_email, $this->guest_email);
+                if( !is_wp_error( $id ) ){
+                    $this->user_id = $id;
+                    $this->user_object = get_user_by( 'email', $this->guest_email );
+                    $this->user_type   = 'user';
+                    wp_update_user( array( 'ID' => $this->user_id, 'display_name' => $this->guest_name ) );
+                }
             }
         }
     }
@@ -321,3 +330,5 @@ class WPSPTicketCreate {
     }
     
 }
+
+endif;

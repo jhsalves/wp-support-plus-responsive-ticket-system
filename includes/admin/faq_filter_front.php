@@ -7,8 +7,8 @@ $categories = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_faq_catagor
 <div class="faq_item">
 	<table>
 		<tr>
-			<td><?php _e('Category:','wp-support-plus-responsive-ticket-system');?></td>
-			<td>
+			<td><?php _e('Category:','wp-support-plus-responsive-ticket-system');?>
+			
 				<select id="filter_by_faq_category_front">
 					<option value="all"><?php _e('All','wp-support-plus-responsive-ticket-system');?></option>
 					<?php 
@@ -18,14 +18,9 @@ $categories = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_faq_catagor
 					?>
 				</select>
 			</td>
-		</tr>
-	</table>
-</div>
-
-<div class="faq_search">
-	<table>
-		<tr>
-			<td><input type="text" id="filter_by_faq_search_front" size="10" placeholder="<?php _e('Search...','wp-support-plus-responsive-ticket-system');?>" /></td>
+                        <td>
+                        <input type="text" id="filter_by_faq_search_front" placeholder="<?php _e('Search...','wp-support-plus-responsive-ticket-system');?>" />    
+                        </td>
 		</tr>
 	</table>
 </div>

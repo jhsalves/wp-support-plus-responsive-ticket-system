@@ -2,7 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 ?>
 <div id="wpsp_reply_confirm">
-  <?php _e('Submit Reply?','wp-support-plus-responsive-ticket-system-ticket-system');?>
+  <?php _e('Submit Reply?','wp-support-plus-responsive-ticket-system');?>
 </div>
 <script>
     jQuery('document').ready(function(){

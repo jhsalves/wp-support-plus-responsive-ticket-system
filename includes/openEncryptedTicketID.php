@@ -63,8 +63,7 @@ if( $isTicketLink && $wpsp_hash->checkAuth($ticket_id, $auth) ){
         foreach ($customFields as $field) {
             if (in_array($field->id, $advancedSettingsFieldOrder['display_fields'])) {
                 $fieldValue = $wpdb->get_var("select cust" . $field->id . " from {$wpdb->prefix}wpsp_ticket WHERE id=" . $ticket_id);
-                if (!$fieldValue)
-                    $fieldValue = __('', 'wp-support-plus-responsive-ticket-system');
+                if ($fieldValue){                   
                 switch ($field->field_type) {
                     case '1':
                         echo "<b>" . $field->label . ":</b> " . stripcslashes(htmlspecialchars_decode($fieldValue, ENT_QUOTES)) . "<br>";
@@ -73,7 +72,11 @@ if( $isTicketLink && $wpsp_hash->checkAuth($ticket_id, $auth) ){
                         if ($field->field_options != NULL) {
                             $field_options = unserialize($field->field_options);
                             if (isset($field_options[$fieldValue])) {
-                                echo "<b>" . $field->label . ":</b> " . stripcslashes(htmlspecialchars_decode($field_options[$fieldValue], ENT_QUOTES)) . "<br>";
+                                $cust_value=$field_options[$fieldValue];
+                                if(is_numeric($fieldValue)){
+                                    $cust_value=$fieldValue;
+                                }
+                                echo "<b>" . $field->label . ":</b> " . stripcslashes(htmlspecialchars_decode($cust_value, ENT_QUOTES)) . "<br>";
                             } else {
                                 echo "<b>" . $field->label . ":</b> " . stripcslashes(htmlspecialchars_decode($fieldValue, ENT_QUOTES)) . "<br>";
                             }
@@ -105,6 +108,7 @@ if( $isTicketLink && $wpsp_hash->checkAuth($ticket_id, $auth) ){
                     case '6':
                         echo "<b>" . $field->label . ":</b> " . stripcslashes(htmlspecialchars_decode($fieldValue, ENT_QUOTES)) . "<br>";
                         break;
+                    }
                 }
             }
         }

@@ -11,7 +11,9 @@ $arrayVisible=apply_filters('wpsp_ticket_list_backend_visible_btns',$arrayVisibl
 <div class="wpspFilterDashboard">
 	<button id="wpspBtnApplyTicketFilter" class="btn btn-primary" onclick="wpsp_open_apply_filter();"><?php _e('Apply Filter', 'wp-support-plus-responsive-ticket-system');?></button>
 	<button id="wpspBtnResetTicketFilter" class="btn btn-primary" onclick="wpsp_reset_filter();"><?php _e('Reset Filter', 'wp-support-plus-responsive-ticket-system');?></button>
-	
+	<?php       
+             do_action('wpsp_action_before_backend_ticket_list');      
+        ?>
         <?php if( $emailSettings['enable_email_pipe'] && $emailSettings['piping_type']=='imap' && $current_user->has_cap('manage_support_plus_agent') && class_exists('WPSupportPlusEmailPipe') ){ ?>
             <button id="wpspBtnSynkIMAP" class="btn btn-primary" onclick="wpsp_imap_loader();"><?php _e('Sync Emails', 'wp-support-plus-responsive-ticket-system');?></button>
         <?php }?>

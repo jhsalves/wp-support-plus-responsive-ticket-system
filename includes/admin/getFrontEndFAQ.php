@@ -1,12 +1,17 @@
 <?php 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 global $wpdb;
-
-$category_id = sanitize_text_field($_POST['category']);
+$category_id='all';
+if(isset($_POST['category'])){
+    $category_id = sanitize_text_field($_POST['category']);
+}
 if($category_id!='all'){
     $category_id = intval($category_id);
 }
-$search_txt  = sanitize_text_field($_POST['search']);
+$search_txt='';
+if(isset($_POST['search'])){
+    $search_txt  = sanitize_text_field($_POST['search']);
+}
 $page_no     = intval(sanitize_text_field($_POST['page_no']));
 
 $sql="select f.id,f.question,f.answer,f.category_id,c.name as category from {$wpdb->prefix}wpsp_faq f INNER JOIN {$wpdb->prefix}wpsp_faq_catagories c ON f.category_id=c.id";

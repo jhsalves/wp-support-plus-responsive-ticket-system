@@ -126,6 +126,8 @@ function wpsp_getAllTickets(){
 	jQuery('#create_ticket').removeClass('active');
 	jQuery('#FAQ_TAB').removeClass('active');
 	jQuery('#ticketContainer').addClass('active');
+        jQuery('#tab_ticket_dashboard').parent().removeClass('active');
+        jQuery('#ticket_dashboard').removeClass('active');
 	/*********************divi themecompatibility*********************/
 	
 	if(display_ticket_data.user_logged_in==1){
@@ -142,6 +144,8 @@ function wpsp_getCreateTicket(){
 	jQuery('#ticketContainer').removeClass('active');
 	jQuery('#FAQ_TAB').removeClass('active');
 	jQuery('#create_ticket').addClass('active');
+        jQuery('#tab_ticket_dashboard').parent().removeClass('active');
+        jQuery('#ticket_dashboard').removeClass('active');
 	/*********************divi themecompatibility*********************/
 	
 	jQuery('#create_ticket_container').hide();
@@ -225,6 +229,8 @@ function wpsp_getFAQ(){
 	jQuery('#ticketContainer').removeClass('active');
 	jQuery('#create_ticket').removeClass('active');
 	jQuery('#FAQ_TAB').addClass('active');
+        jQuery('#tab_ticket_dashboard').parent().removeClass('active');
+        jQuery('#ticket_dashboard').removeClass('active');
 	/*********************divi themecompatibility*********************/
 	
 	jQuery('.faq_filter').show();
@@ -1094,4 +1100,29 @@ function wpspUploadAttachment(files,page) {
 function removeAttachment(page,attachment_id,wpsp_attachment_counter){
     jQuery('#wpsp_attach_value_'+page+'_'+attachment_id).remove();
     jQuery('#wpsp_frm_attachment_'+page+'_'+wpsp_attachment_counter).remove();
+}
+
+function wpsp_getDashboard(){
+    /*********************divi themecompatibility*********************/
+	jQuery('#tab_ticket_container').parent().removeClass('active');
+	jQuery('#tab_create_ticket').parent().removeClass('active');
+	jQuery('#tab_faq').parent().removeClass('active');
+        
+	jQuery('#ticketContainer').removeClass('active');
+	jQuery('#create_ticket').removeClass('active');
+	jQuery('#FAQ_TAB').removeClass('active');
+        
+        jQuery('#tab_ticket_dashboard').parent().addClass('active');
+        jQuery('#ticket_dashboard').addClass('active');
+    /*********************divi themecompatibility*********************/
+        var data = {
+            'action': 'wpspgetFrontDashboardStatistics'
+	};
+
+	jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {
+            jQuery('#ticket_dashboard .wait').hide();
+            jQuery('#ticket_dashboard_container').html(response);
+            jQuery('#ticket_dashboard_container').show();
+            wpsp_frontend_dashboard_callback();
+        });
 }

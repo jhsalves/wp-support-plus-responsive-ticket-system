@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  */ 
 global $wpdb;
 $term = sanitize_text_field($_POST['search_keywords']);
-$sql = "SELECT u.* FROM " . $wpdb->base_prefix . "users u INNER JOIN {$wpdb->base_prefix}usermeta m ON u.ID=m.user_id WHERE 1=1 AND (u.user_login LIKE '%" . $term . "%' OR u.user_email LIKE '%" . $term . "%' OR u.display_name LIKE '%" . $term . "%' OR m.meta_value LIKE '%" . $term . "%') GROUP BY u.ID ORDER BY u.display_name ASC LIMIT 5";
+$sql = "SELECT u.* FROM " . $wpdb->base_prefix . "users u INNER JOIN {$wpdb->base_prefix}usermeta m ON u.ID=m.user_id WHERE 1=1 AND (u.user_login LIKE '%" . $term . "%' OR u.user_email LIKE '%" . $term . "%' OR u.display_name LIKE '%" . $term . "%' OR m.meta_value LIKE '%" . $term . "%') GROUP BY u.ID ORDER BY u.display_name ASC LIMIT 20";
 $wpspUsers = $wpdb->get_results( $sql );
 if (!empty( $wpspUsers ) ) {
     ?>

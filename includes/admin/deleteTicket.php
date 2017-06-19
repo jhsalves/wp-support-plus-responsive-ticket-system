@@ -22,14 +22,17 @@ if(($current_user->has_cap('manage_support_plus_ticket') && $generalSettings['al
 /*
  * prepare email templete mail
  */
-$et_success_staff_subject='['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system').' '.$advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.'] '.stripslashes($wpsp_et_delete_ticket['mail_subject']);
-$et_staff_body=stripslashes($wpsp_et_delete_ticket['mail_body']);
+$et_success_staff_subject='['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system').' '.$advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.'] '.__(stripslashes($wpsp_et_delete_ticket['mail_subject']),'wp-support-plus-responsive-ticket-system');
+$et_staff_body=__(stripslashes($wpsp_et_delete_ticket['mail_body']),'wp-support-plus-responsive-ticket-system');
 
 $sql="select * FROM {$wpdb->prefix}wpsp_ticket WHERE id=".$ticket_id;
 $ticket=$wpdb->get_row($sql);
 
 $sql="select name FROM {$wpdb->prefix}wpsp_catagories WHERE id=".$ticket->cat_id;
 $category = $wpdb->get_row($sql);
+
+$sql="select * FROM {$wpdb->prefix}wpsp_custom_priority WHERE name="."'$ticket->priority'";
+$priority = $wpdb->get_row($sql);
 
 $customerName='';
 $customerEmail='';
@@ -90,9 +93,9 @@ foreach ($wpsp_et_delete_ticket['templates'] as $et_key=>$et_val){
             $et_success_staff_subject = str_replace('{ticket_category}', __($category->name,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
             $et_staff_body = str_replace('{ticket_category}', __($category->name,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
             break;
-        case 'ticket_priotity':
-            $et_success_staff_subject = str_replace('{ticket_priotity}', __($ticket->priority,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
-            $et_staff_body = str_replace('{ticket_priotity}', __($ticket->priority,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
+        case 'ticket_priority':
+            $et_success_staff_subject = str_replace('{ticket_priority}', __($priority->name,'wp-support-plus-responsive-ticket-system'), $et_success_staff_subject);
+            $et_staff_body = str_replace('{ticket_priority}', __($priority->name,'wp-support-plus-responsive-ticket-system'), $et_staff_body);
             break;
         case 'updated_by':
             $et_success_staff_subject = str_replace('{updated_by}', $current_user->display_name, $et_success_staff_subject);
@@ -285,7 +288,8 @@ foreach ($to as $to_email){
 
 //error_log(PHP_EOL.'To emails in delete ticket:'.PHP_EOL.implode(PHP_EOL, $to_new));
 //error_log(PHP_EOL.'Headers in delete ticket:'.PHP_EOL.implode(PHP_EOL, $headers));
-
+//error_log($et_success_staff_subject);
+//error_log($et_staff_body);
 $send_delete_mail=true;
 if($ticket->active==0){
     $send_delete_mail=false;

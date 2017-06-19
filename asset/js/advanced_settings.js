@@ -63,7 +63,7 @@ function setAdvancedSettings(){
     var wpsp_shortcode_used_in =jQuery('input[name=wpsp_shortcode_used_in]:checked').val();
     var enable_accordion=jQuery('input[name=enable_accordion]:checked').val();
     var ticketId=jQuery('input[name=ticketId]:checked').val();
-    var hide_selected_status_ticket=jQuery('#hide_selected_status_ticket option:selected').val();
+    var hide_selected_status_ticket=jQuery("input[name='hideSelectedStatusFrontend\\[\\]']:checked").map(function(){return jQuery(this).val();}).get();
     var logout_Settings=jQuery('input[name=logout_Settings]:checked').val();
     var admin_bar_Setting=jQuery('input[name=admin_bar_Setting]:checked').val();
     var hide_selected_status_ticket_backend = jQuery("input[name='hideSelectedStatusBackend\\[\\]']:checked")
@@ -94,7 +94,8 @@ function setAdvancedSettings(){
 	        guest_ticket_redirect=1;
 	}
         var guest_ticket_redirect_url=jQuery('#guest_ticket_redirect_url').val().trim();
-        var message_for_ticket_url=jQuery('#wpsp_ticket_url_message').val().trim();
+        //var message_for_ticket_url=jQuery('#wpsp_ticket_url_message').val().trim();
+        var message_for_ticket_url='';
         var wpsp_ticket_list=jQuery('input[name=wpsp_ticket_list]:checked').val();
         var data = {
             'action': 'setAdvancedSettings',
@@ -790,6 +791,7 @@ function setWooSettings(){
     var wpsp_order_help =jQuery('input[name=wpsp_order_help]:checked').val();
     var wpsp_order_btn_label =jQuery('input[name=wpsp_order_btn_label]').val();
     var wpsp_woo_submission_message =jQuery('#wpsp_woo_submission_message').val().trim();
+    var wpsp_support_tab =jQuery('input[name=wpsp_support_tab]:checked').val();
     
     var data = {
         'action': 'setWooSettings',
@@ -798,7 +800,8 @@ function setWooSettings(){
         'wpsp_prod_btn_label':wpsp_prod_btn_label,
         'wpsp_order_help':wpsp_order_help,
         'wpsp_order_btn_label':wpsp_order_btn_label,
-        'wpsp_woo_submission_message':wpsp_woo_submission_message
+        'wpsp_woo_submission_message':wpsp_woo_submission_message,
+        'wpsp_enable_support_tab':wpsp_support_tab
     };
 
     jQuery.post(display_ticket_data.wpsp_ajax_url, data, function(response) {

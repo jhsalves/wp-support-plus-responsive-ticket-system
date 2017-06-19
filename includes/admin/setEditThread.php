@@ -1,4 +1,5 @@
 <?php 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 global $wpdb;
 $thread_id = sanitize_text_field($_POST['thread_id']);
 //code to insert into db

@@ -57,7 +57,7 @@ if($hackFlag){
 }
 
 if(apply_filters('wpsp_check_current_ticket_in_list',false,$ticket,$current_user)){
-     die(__('Sorry! You do not have permission to view this ticket.','wp-support-plus-responsive'));
+     die(__('Sorry! You do not have permission to view this ticket.','wp-support-plus-responsive-ticket-system'));
 }
 
 $sql="select *,
@@ -126,7 +126,7 @@ $arrayVisible=apply_filters('wpsp_indivisual_ticket_frontend_visible_btns',$arra
 <?php if($arrayVisible['ticketstatus'] && $isVisible && $FrontEndDisplaySettings['wpsp_hideChangeStatus']){
     $btnStyle="color:".$FrontEndDisplaySettings['wpsp_ct_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_ct_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_ct_bc'];
     ?>
-    <button style="<?php echo $btnStyle;?>" class="btn btn-primary changeTicketSubBtn" id="btnChangeTicketStatus" onclick="getChangeTicketStatus(<?php echo $ticket_id;?>);"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][1]);?></button>
+    <button style="<?php echo $btnStyle;?>" class="btn btn-primary changeTicketSubBtn" id="btnChangeTicketStatus" onclick="getChangeTicketStatus(<?php echo $ticket_id;?>);"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][1],'wp-support-plus-responsive-ticket-system');?></button>
 <?php }?>
     
 <?php if($arrayVisible['closeticket'] && $isVisible && !$generalSettings['close_ticket_btn_status_val']=='' && $generalSettings['close_ticket_btn_status_val']!=$ticket->status && $FrontEndDisplaySettings['wpsp_hideCloseTicket']){
@@ -137,13 +137,13 @@ $arrayVisible=apply_filters('wpsp_indivisual_ticket_frontend_visible_btns',$arra
 <?php if($arrayVisible['canned'] && $isVisible && $current_user->has_cap('manage_support_plus_ticket') && $FrontEndDisplaySettings['wpsp_hideCannedReply']){
     $btnStyle="color:".$FrontEndDisplaySettings['wpsp_cr_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_cr_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_cr_bc'];
     ?>
-    <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" id="psmwpsp_canned"  type="submit" data-target="#psmwpsp_loader" onclick="cannedrep();"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][2]);?></button>
+    <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" id="psmwpsp_canned"  type="submit" data-target="#psmwpsp_loader" onclick="cannedrep();"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][2],'wp-support-plus-responsive-ticket-system');?></button>
 <?php }?>
  
  <?php if($arrayVisible['assignagent'] && $isVisible && ($current_user->has_cap('manage_support_plus_agent') || ($current_user->has_cap('manage_support_plus_ticket') && $generalSettings['allow_agents_to_assign_tickets']==1) ) && $FrontEndDisplaySettings['wpsp_hideAssignAgent']){
          $btnStyle="color:".$FrontEndDisplaySettings['wpsp_aa_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_aa_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_aa_bc'];
          ?>
-         <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" onclick="assignAgent(<?php echo $ticket_id;?>);"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][3]);?></button>
+         <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" onclick="assignAgent(<?php echo $ticket_id;?>);"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][3],'wp-support-plus-responsive-ticket-system');?></button>
 <?php }?>
 
 <?php do_action('wpsp_ticket_action_before_more_btn_frontend',$ticket);?>
@@ -170,25 +170,25 @@ else{
     if($arrayVisible['raisedby'] && current_user_can( 'manage_options' )&& $FrontEndDisplaySettings['wpsp_ChangeRaisedBy']){
         $btnStyle="color:".$FrontEndDisplaySettings['wpsp_cb_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_cb_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_cb_bc'];
         ?>
-        <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" onclick="getRaisedByTicketUser(<?php echo $ticket_id;?>);"><?php printf(__('%s','wp-support-plus-responsive'),$FrontEndDisplaySettings['front_end_display_alice'][13]);?></button><?php
+        <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" onclick="getRaisedByTicketUser(<?php echo $ticket_id;?>);"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][13],'wp-support-plus-responsive-ticket-system');?></button><?php
         }
     else{
         foreach($advancedSettings['modify_raised_by'] as $modifyRaisedBy){
             if($arrayVisible['raisedby'] && (( $current_user->has_cap('manage_support_plus_ticket') && $modifyRaisedBy == 'wp_support_plus_agent')) && $FrontEndDisplaySettings['wpsp_ChangeRaisedBy'] || (($modifyRaisedBy == 'wp_support_plus_supervisor') && $current_user->has_cap('manage_support_plus_agent')) && $FrontEndDisplaySettings['wpsp_ChangeRaisedBy']){
             $btnStyle="color:".$FrontEndDisplaySettings['wpsp_cb_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_cb_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_cb_bc'];
         ?>
-        <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" onclick="getRaisedByTicketUser(<?php echo $ticket_id;?>);"><?php printf(__('%s','wp-support-plus-responsive'),$FrontEndDisplaySettings['front_end_display_alice'][13]);?></button>
+        <button style="<?php echo $btnStyle;?>" class="btn btn-primary wpsp_ticket_nav_btn" onclick="getRaisedByTicketUser(<?php echo $ticket_id;?>);"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][13],'wp-support-plus-responsive-ticket-system');?></button>
     <?php   }
         }   
     }?>
     <?php if($arrayVisible['deleteticket'] && ($current_user->has_cap('manage_support_plus_agent') || ($current_user->has_cap('manage_support_plus_ticket') && $generalSettings['allow_agents_to_delete_tickets']==1)) && $FrontEndDisplaySettings['wpsp_hideDeleteTicket']){
         $btnStyle="color:".$FrontEndDisplaySettings['wpsp_dt_fc']."; background-color:".$FrontEndDisplaySettings['wpsp_dt_bc']."; border-color:".$FrontEndDisplaySettings['wpsp_dt_bc'];
         ?>
-        <button style="<?php echo $btnStyle;?>" class="btn btn-danger wpsp_ticket_nav_btn" onclick="deleteTicket(<?php echo $ticket_id;?>);"><?php printf(__('%s','wp-support-plus-responsive-ticket-system'),$FrontEndDisplaySettings['front_end_display_alice'][4]);?></button>
+        <button style="<?php echo $btnStyle;?>" class="btn btn-danger wpsp_ticket_nav_btn" onclick="deleteTicket(<?php echo $ticket_id;?>);"><?php echo __($FrontEndDisplaySettings['front_end_display_alice'][4],'wp-support-plus-responsive-ticket-system');?></button>
     <?php } 
         
         if(current_user_can( 'manage_options' ) && $ticket->active==0 && $isVisible && $arrayVisible['restoreticket']){
-            ?><button class="btn btn-primary wpsp_ticket_nav_btn" onclick="wpsp_restore_ticket(<?php echo $ticket_id;?>);"><?php _e('Restore Ticket','wp-support-plus-responsive');?></button>&nbsp;<?php
+            ?><button class="btn btn-primary wpsp_ticket_nav_btn" onclick="wpsp_restore_ticket(<?php echo $ticket_id;?>);"><?php _e('Restore Ticket','wp-support-plus-responsive-ticket-system');?></button>&nbsp;<?php
         }
         
     do_action('wpsp_getindivisual_frontend_actions_append_inside_more',$ticket);
@@ -198,7 +198,14 @@ else{
 <?php 
      do_action('wpsp_open_ticket_frontend_before_subject_header',$ticket);
      
-    $editCustomField=apply_filters('wpsp_enable_disable_edit_custom_fields',true,$ticket,$current_user);
+    if($current_user->has_cap('manage_support_plus_ticket') && !$current_user->has_cap('manage_support_plus_agent') && $ticket->active==1 && $generalSettings['allow_agents_to_edit_tickets']==1){
+        $editCustomField=true;
+    }else if($current_user->has_cap('manage_support_plus_agent') && $ticket->active==1){
+        $editCustomField=true;
+    }else{
+        $editCustomField=false;
+    }
+    $editCustomField=apply_filters('wpsp_enable_disable_edit_custom_fields',$editCustomField,$ticket,$current_user);
 ?>
 <h3>
     <?php echo '['.__($advancedSettings['ticket_label_alice'][1],'wp-support-plus-responsive-ticket-system')?><?php echo $advancedSettings['wpsp_ticket_id_prefix'].$ticket_id.'] '.stripcslashes(htmlspecialchars_decode($ticket->subject,ENT_QUOTES));?>
@@ -226,7 +233,11 @@ else{
                                                 $field_options=unserialize($field->field_options);
                                                 if(isset($field_options[$fieldValue]))
                                                 {
-                                                    echo "<b>".$field->label.":</b> ".stripcslashes(htmlspecialchars_decode($field_options[$fieldValue],ENT_QUOTES)); 
+                                                    $cust_value=$field_options[$fieldValue];
+                                                    if(is_numeric($fieldValue)){
+                                                        $cust_value=$fieldValue;
+                                                    }
+                                                    echo "<b>".$field->label.":</b> ".stripcslashes(htmlspecialchars_decode($cust_value,ENT_QUOTES)); 
                                                 }
                                                 else
                                                 {
@@ -269,7 +280,7 @@ else{
 						}
 					break;
 					case '5':
-						echo "<b>".$field->label.":</b> <br>".nl2br($fieldValue);
+						echo "<b>".$field->label.":</b> <br>".nl2br(stripslashes($fieldValue));
                                                 if($current_user->has_cap('manage_support_plus_ticket')){ echo $editCustomField? '<img alt="Edit" class="wpsp_edit_fields" title="Edit" onclick="getEditCustomField('. $ticket_id .')" src="'.WCE_PLUGIN_URL.'asset/images/edit.png'.'" />':''; }
                                                 echo "<br>";
 					break;
@@ -470,6 +481,7 @@ if($advancedSettings['enable_accordion']){
             $user=get_userdata( $thread->created_by );
             $user_name=$user->display_name;
             $user_email=$user->user_email;
+            $gravtar_user_email=$user->user_email;
             $userSignature = $wpdb->get_row( "select signature FROM {$wpdb->prefix}wpsp_agent_settings WHERE agent_id=".$thread->created_by );
             if($wpdb->num_rows){
                 $signature='<br>---<br>'.stripcslashes(htmlspecialchars_decode($userSignature->signature,ENT_QUOTES));
@@ -478,6 +490,7 @@ if($advancedSettings['enable_accordion']){
         else{
             $user_name=$thread->guest_name;
             $user_email=$thread->guest_email;
+            $gravtar_user_email=$thread->guest_email;
         }
         $modified='';
         if ($thread->date_modified_month) $modified=$thread->date_modified_month.' '.__('months ago','wp-support-plus-responsive-ticket-system');
@@ -519,8 +532,8 @@ if($advancedSettings['enable_accordion']){
                 $assign_to_str=  implode(',', $assign_to_str);
             }
          ?>
-        <h3 class="unclickableAcc"><strong><?php echo $user_name.' '.__('assigned to','wp-support-plus-responsive').' '. $assign_to_str.' '.$log_modifier;?></strong></h3>
-        <div class="threadContainer unclickableAccBody"><?php echo __('Assign to','wp-support-plus-responsive').' '.$assign_to_str;?></div>
+        <h3 class="unclickableAcc"><strong><?php echo $user_name.' '.__('assigned to','wp-support-plus-responsive-ticket-system').' '. $assign_to_str.' '.$log_modifier;?></strong></h3>
+        <div class="threadContainer unclickableAccBody"><?php echo __('Assign to','wp-support-plus-responsive-ticket-system').' '.$assign_to_str;?></div>
          <?php 
         } 
             else if ($thread->note == 3 && $current_user->has_cap('manage_support_plus_ticket')) {
@@ -528,8 +541,8 @@ if($advancedSettings['enable_accordion']){
                 $user=get_userdata( $thread->created_by );
                 $user_name=$user->display_name;
                 ?>
-                <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed status to','wp-support-plus-responsive').' '. $thread->body.' '.$log_modifier; ?></strong></h3>
-                <div class="threadContainer unclickableAccBody"><?php echo $user_name?><?php echo __('Change status to','wp-support-plus-responsive').' '. $thread->body; ?></div>
+                <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed status to','wp-support-plus-responsive-ticket-system').' '. $thread->body.' '.$log_modifier; ?></strong></h3>
+                <div class="threadContainer unclickableAccBody"><?php echo $user_name?><?php echo __('Change status to','wp-support-plus-responsive-ticket-system').' '. $thread->body; ?></div>
                 <?php }  
             else if ($thread->note == 4 && $current_user->has_cap('manage_support_plus_ticket')) {
                 $cat_id=$thread->body;
@@ -537,16 +550,16 @@ if($advancedSettings['enable_accordion']){
                 $user_name=$user->display_name;
                 $cat_name = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}wpsp_catagories where id=".$cat_id);
                 ?>
-                <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed category to','wp-support-plus-responsive').' '. $cat_name->name.' '.$log_modifier; ?></strong></h3>
-                <div class="threadContainer unclickableAccBody"><?php echo $user_name?><?php echo __('change category to','wp-support-plus-responsive').' '. $cat_name->name; ?></div>
+                <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed category to','wp-support-plus-responsive-ticket-system').' '. $cat_name->name.' '.$log_modifier; ?></strong></h3>
+                <div class="threadContainer unclickableAccBody"><?php echo $user_name?><?php echo __('change category to','wp-support-plus-responsive-ticket-system').' '. $cat_name->name; ?></div>
                 <?php }  
             else if ($thread->note == 5 && $current_user->has_cap('manage_support_plus_ticket')) {
                 $priority_name=$thread->body;
                 $user=get_userdata( $thread->created_by );
                 $user_name=$user->display_name;
                  ?>
-        <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed priority to','wp-support-plus-responsive').' '. $priority_name.' '.$log_modifier; ?></strong></h3>
-        <div class="threadContainer unclickableAccBody"><?php echo $user_name?><?php echo __('change priority to','wp-support-plus-responsive').' '. $priority_name; ?></div>
+        <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed priority to','wp-support-plus-responsive-ticket-system').' '. $priority_name.' '.$log_modifier; ?></strong></h3>
+        <div class="threadContainer unclickableAccBody"><?php echo $user_name?><?php echo __('change priority to','wp-support-plus-responsive-ticket-system').' '. $priority_name; ?></div>
                 <?php }  
             else if ($thread->note == 6 && $current_user->has_cap('manage_support_plus_ticket')) {             
                 $raised_by=$thread->body;             
@@ -560,8 +573,8 @@ if($advancedSettings['enable_accordion']){
                     $user=get_userdata( $thread->created_by );             
                     $user_name=$user->display_name;             
                     ?>
-               <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed raised by to','wp-support-plus-responsive').' '. $raised_by.' '.$log_modifier; ?></strong></h3>             
-               <div class="threadContainer unclickableAccBody"><?php echo $user_name?> <?php echo __('changed raised by to','wp-support-plus-responsive').' '. $raised_by; ?></div>            
+               <h3 class="unclickableAcc"><strong><?php echo $user_name ?> <?php echo __('changed raised by to','wp-support-plus-responsive-ticket-system').' '. $raised_by.' '.$log_modifier; ?></strong></h3>             
+               <div class="threadContainer unclickableAccBody"><?php echo $user_name?> <?php echo __('changed raised by to','wp-support-plus-responsive-ticket-system').' '. $raised_by; ?></div>            
                 <?php } 
         else{ ?>
         <h3><strong><?php echo $user_name;?></strong> <em><?php echo $user_email;?></em> <?php echo $modified_exact_date;?> <?php echo $modified_exact_time;?> <?php echo ($modified)?"($modified)":'';?>
@@ -571,7 +584,7 @@ if($advancedSettings['enable_accordion']){
         <div class="threadContainer">
             <div class="threadHeader">
                 <div class="gravtar_container">
-                    <?php echo get_avatar($user_email,60);?>
+                    <?php echo get_avatar($gravtar_user_email,60);?>
                 </div>
                 <div class="threadInfo">
                     <span class="threadUserName"><?php echo $user_name;?></span><br>
@@ -591,10 +604,10 @@ if($advancedSettings['enable_accordion']){
                 <div class='note' style='size:18px;color:red;'><?php _e('Private Note : Not Visible to Customers','wp-support-plus-responsive-ticket-system');?></div>
             <?php }?>
 
-            <div class="threadBody"><?php do_action('wpsp_before_thread_body_frontend',$thread)?><?php echo $body;?></div>
+            <div class="threadBody"><?php do_action('wpsp_before_thread_body_frontend',$thread)?><?php echo $body; do_action('wpsp_after_thread_body_frontend',$thread) ?></div>
             <?php if(count($attachments)){?>
                 <div class="threadAttachment">
-                        <span id="wpsp_reply_attach_label"><?php _e('Attachments','wp-support-plus-responsive');?>:</span><br>
+                        <span id="wpsp_reply_attach_label"><?php _e('Attachments','wp-support-plus-responsive-ticket-system');?>:</span><br>
                         <?php 
                         $attachCount=0;
                         foreach ($attachments as $attachment){

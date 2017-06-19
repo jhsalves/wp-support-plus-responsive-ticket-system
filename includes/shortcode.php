@@ -11,6 +11,7 @@ final class WPSupportPlusFrontEnd{
             add_shortcode( 'wp_support_plus_all_tickets', array( $this, 'support_plus_all_tickets_shortcode' ) );
             add_shortcode( 'wp_support_plus_create_ticket', array( $this, 'support_plus_create_ticket_shortcode' ) );
             add_shortcode( 'wpsp_open_ticket', array( $this, 'wpsp_open_ticket' ) );
+            add_shortcode( 'wp_support_plus_dashboard',array( $this, 'support_plus_dashboard_shortcode' ));
 	}
 	
 	function loadScripts(){
@@ -22,11 +23,11 @@ final class WPSupportPlusFrontEnd{
                 wp_enqueue_script( 'jquery-ui-core' );
                 wp_enqueue_script( 'jquery-ui-dialog' );
                 wp_enqueue_style ( 'wp-jquery-ui-dialog' );
+                wp_enqueue_style( 'jquery-ui-css', WCE_PLUGIN_URL . 'asset/css/jquery-ui.min.css?version='.WPSP_VERSION );
+                wp_enqueue_style( 'jquery-ui-structure-css', WCE_PLUGIN_URL . 'asset/css/jquery-ui.structure.min.css?version='.WPSP_VERSION );
+                wp_enqueue_style( 'jquery-ui-theme-css', WCE_PLUGIN_URL . 'asset/css/jquery-ui.theme.min.css?version='.WPSP_VERSION );
                 if($advancedSettings['enable_accordion']==1){
                     wp_enqueue_script( 'jquery-ui-accordion' );
-                    wp_enqueue_style( "jquery-ui-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.min.css' );
-                    wp_enqueue_style( "jquery-ui-structure-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.structure.min.css' );
-                    wp_enqueue_style( "jquery-ui-theme-css", WCE_PLUGIN_URL . 'asset/css/jquery-ui.theme.min.css' );
                 }
                 if($advancedSettings['wpspBootstrapCSSSetting']){
                     wp_enqueue_style('wpce_bootstrap', WCE_PLUGIN_URL . 'asset/js/bootstrap/css/bootstrap.css?version='.WPSP_VERSION);
@@ -43,7 +44,6 @@ final class WPSupportPlusFrontEnd{
                 wp_enqueue_script('wpce_ckeditor_jquery_adapter', WCE_PLUGIN_URL . 'asset/lib/ckeditor/adapters/jquery.js?version='.WPSP_VERSION);
                
                 wp_enqueue_script('jquery-ui-datepicker');
-                wp_enqueue_style('wpce_admin', WCE_PLUGIN_URL . 'asset/css/jquery-ui.css?version='.WPSP_VERSION);
 
                 $isUserLogged=(is_user_logged_in())?1:0;
 
@@ -149,10 +149,8 @@ final class WPSupportPlusFrontEnd{
 		return ob_get_clean();
 	}
         function support_plus_create_ticket_shortcode(){
-            
 		ob_start();
 		?>
-                        
 		<div class="support_bs">
 			<?php 
 			if(is_user_logged_in()){
@@ -178,6 +176,25 @@ final class WPSupportPlusFrontEnd{
             <?php 
             return ob_get_clean();
         }
+        
+        function support_plus_dashboard_shortcode(){
+		$generalSettings=get_option( 'wpsp_general_settings' );		
+		ob_start();
+		?>
+		<div class="support_bs">
+			<?php 
+			if(is_user_logged_in()){
+                        include( WCE_PLUGIN_DIR.'includes/loggedInUserDashboard.php' );
+                         }
+                        else {
+                            include( WCE_PLUGIN_DIR.'includes/loginForm.php' );
+                        }
+			?>
+		</div>
+		<?php
+                do_action('wpsp_tickets_end_frontend');
+		return ob_get_clean();
+	}
 }
 
 $GLOBALS['WPSupportPlusFrontEnd'] =new WPSupportPlusFrontEnd();

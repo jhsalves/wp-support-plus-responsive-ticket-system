@@ -6,7 +6,7 @@ if (!$cu->has_cap('manage_options')) exit; // Exit if current user is not admin
 $advancedSettings=get_option( 'wpsp_advanced_settings' );
 
 ?>
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs wpsp_advance_set_tabs">
     <li class="active"><a href="#settingsAdvanced" id="tab_advanced_container" data-toggle="tab"><?php _e('Advanced Settings','wp-support-plus-responsive-ticket-system');?></a></li>
     <li><a href="#settingsCustomStatus" id="tab_custom_status_container" data-toggle="tab"><?php _e('Custom Status','wp-support-plus-responsive-ticket-system');?></a></li>
     <li><a href="#settingsCustomPriority" id="tab_custom_priority_container" data-toggle="tab"><?php _e('Custom Priority','wp-support-plus-responsive-ticket-system');?></a></li>
@@ -24,6 +24,7 @@ $advancedSettings=get_option( 'wpsp_advanced_settings' );
         include( WPSP_EXP_PLUGIN_DIR.'includes/admin/advanced_setting_header.php' );
     }
     ?>
+    <?php do_action('wpsp_add_tab_advance_settings');?>
 </ul>
 <!-- Tab panes -->
 <div class="tab-content">
@@ -86,5 +87,6 @@ $advancedSettings=get_option( 'wpsp_advanced_settings' );
             include( WPSP_EXP_PLUGIN_DIR.'includes/admin/advanced_setting_body.php' );
         }
         ?>
+        <?php do_action('wpsp_advance_settings_add_tab_content');?>
 </div>
 <input type="hidden" id="wpsp_advance_settings_nonce" value="<?php echo wp_create_nonce();?>"/>

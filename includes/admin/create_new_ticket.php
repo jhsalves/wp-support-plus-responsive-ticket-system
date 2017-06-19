@@ -53,7 +53,7 @@ $wpsp_et_create_new_ticket = get_option( 'wpsp_et_create_new_ticket' );
 //$tickets_label= $advancedSettings['default_main_tickets_label'];
 ?>
 <h3><?php _e($advancedSettings['ticket_label_alice'][3],'wp-support-plus-responsive-ticket-system');?></h3>
-    <?php
+<?php
  do_action('wpsp_before_user_ticket_form');
 ?>
 <form id="frmCreateNewTicket" name="frmCreateNewTicket">
@@ -329,7 +329,7 @@ $wpsp_et_create_new_ticket = get_option( 'wpsp_et_create_new_ticket' );
 							         <option value="" class="blankpri"></option>	
                                                              <?php 
 								foreach ($priorities as $priority){
-							            echo '<option value="'.strtolower($priority->name).'" >'.__($priority->name,'wp-support-plus-responsive-ticket-system').'</option>';
+							            echo '<option value="'.($priority->name).'" >'.__($priority->name,'wp-support-plus-responsive-ticket-system').'</option>';
 								}
 								?>
 							    </select>

@@ -4,7 +4,7 @@ $cu = wp_get_current_user();
 if (!$cu->has_cap('manage_support_plus_ticket')) exit;
 ?>
 
-<button type="button" class="btn btn-primary" onclick="wpsp_add_canned_reply()"><?php _e("+ Add New",'wp-support-plus-responsive');?></button>
+<button type="button" class="btn btn-primary" onclick="wpsp_add_canned_reply()"><?php _e("+ Add New",'wp-support-plus-responsive-ticket-system');?></button>
 <br><br>
 <?php 
 global $wpdb;
@@ -18,7 +18,7 @@ $canned = $wpdb->get_results( $sql );
 		  <th style="width: 50px;">#</th>
 		  <th><?php _e('Title','wp-support-plus-responsive-ticket-system');?></th>
                   <th><?php _e('Created By','wp-support-plus-responsive-ticket-system');?></th>
-                  <th><?php _e('Visibility','wp-support-plus-responsive')?></th>
+                  <th><?php _e('Visibility','wp-support-plus-responsive-ticket-system')?></th>
 		  <th><?php _e('Action','wp-support-plus-responsive-ticket-system');?></th>
 	  </tr>
 	  <?php 
@@ -33,10 +33,10 @@ $canned = $wpdb->get_results( $sql );
                     <td><?php echo sanitize_text_field(ucfirst($can->visibility));?></td>
                     <td><?php
                         if($can->uID==$current_user->ID ){?>                                 
-                                <button type=button  class="btn btn-info" onclick="getEditCannedReply(<?php echo intval($can->id);?>)"><?php _e('Edit','wp-support-plus-responsive');?></button>                                 
-                                <button class="btn btn-danger" onclick="deletCannedReply(<?php echo intval($can->id);?>);"><?php _e('Delete','wp-support-plus-responsive');?></button><?php                                                          
+                                <button type=button  class="btn btn-info" onclick="getEditCannedReply(<?php echo intval($can->id);?>)"><?php _e('Edit','wp-support-plus-responsive-ticket-system');?></button>                                 
+                                <button class="btn btn-danger" onclick="deletCannedReply(<?php echo intval($can->id);?>);"><?php _e('Delete','wp-support-plus-responsive-ticket-system');?></button><?php                                                          
                             if($can->visibility=='private') { ?>                                 
-                                <button class="btn btn-info" id="showcanned" data-toggle="modal" data-target="#Modal" onclick="setCurrentCannedId(<?php echo $can->id;?>,'<?php echo $can->sid;?>');"><?php _e('Share','wp-support-plus-responsive');?></button> <?php                           
+                                <button class="btn btn-info" id="showcanned" data-toggle="modal" data-target="#Modal" onclick="setCurrentCannedId(<?php echo $can->id;?>,'<?php echo $can->sid;?>');"><?php _e('Share','wp-support-plus-responsive-ticket-system');?></button> <?php                           
                             } ?><?php                          
                         } ?>
                     </td>

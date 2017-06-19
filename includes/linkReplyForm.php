@@ -23,11 +23,11 @@ if($advancedSettings['hide_selected_status_ticket']!=$ticket->status && $ticket-
         
         <form id="wpsp_frm_ticket_link" onsubmit="submitLinkForm(event,this);">
             <?php _e('Name','wp-support-plus-responsive-ticket-system');?>:<br>
-            <input type="text" id="wpsp_link_form_name" name="guest_name" <?php echo ($wpsp_user_name)?'disabled="disabled"':'';?> value="<?php echo $wpsp_user_name;?>"><br><br>
+            <input type="text" id="wpsp_link_form_name" name="guest_name" <?php echo ($wpsp_user_name)?'disabled="disabled"':'';?> value="<?php echo $wpsp_user_name;?>"><br>
             <?php _e('Email Address','wp-support-plus-responsive-ticket-system');?>:<br>
-            <input type="text" id="wpsp_link_form_email" name="guest_email" <?php echo ($wpsp_user_email)?'disabled="disabled"':'';?> value="<?php echo $wpsp_user_email;?>"><br><br>
+            <input type="text" id="wpsp_link_form_email" name="guest_email" <?php echo ($wpsp_user_email)?'disabled="disabled"':'';?> value="<?php echo $wpsp_user_email;?>"><br>
             <?php _e('Description','wp-support-plus-responsive-ticket-system');?>:<br>
-            <textarea id="wpsp_link_form_desc" name="replyBody"></textarea><br><br>
+            <textarea id="wpsp_link_form_desc" name="replyBody"></textarea><br>
             <?php include( WCE_PLUGIN_DIR.'includes/anti_spam/anti-spam-loader.php' );?>
             <button id="wpsp_link_form_submit_btn" type="submit"><?php _e('Submit Reply','wp-support-plus-responsive-ticket-system');?></button>
             <input type="hidden" name="action" value="wpspSubmitLinkForm">

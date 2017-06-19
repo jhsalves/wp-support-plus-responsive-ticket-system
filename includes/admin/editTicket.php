@@ -22,7 +22,7 @@ $ticket=$wpdb->get_row("select * from {$wpdb->prefix}wpsp_ticket where id=".$tic
 ?>
 <form id="editcustfield" name="editcustfield" onsubmit="setEditCustomField(event,this,<?php echo $ticket_id?>)">
 	<span class="label label-info wpsp_title_label"><?php _e($default_labels['ds'],'wp-support-plus-responsive-ticket-system');?></span><code>*</code><br>
-	<input class="wpsp_required" type="text" id="subject" name="subject" value="<?php echo $ticket->subject;?>" maxlength="80" style="width: 95%; margin-top: 10px;"/><br><br>
+        <input class="wpsp_required" type="text" id="subject" name="subject" value="<?php echo stripslashes($ticket->subject);?>" maxlength="80" style="width: 95%; margin-top: 10px;"/><br><br>
 	<?php $i=0;
 	foreach ($customFields as $field){
                 $custom="cust".$field->id;
@@ -36,7 +36,7 @@ $ticket=$wpdb->get_row("select * from {$wpdb->prefix}wpsp_ticket where id=".$tic
 			switch($field->field_type){
 				case '1': ?>
 					<span class="label label-info" style="font-size: 13px;"><?php echo $field->label;?></span><code>*</code><br>
-					<input class="wpsp_required" type="text" name="cust<?php echo $field->id;?>" value="<?php echo $ticket->$custom?>" maxlength="80" style="width: 95%; margin-top: 10px;"/><br><br>
+                                        <input class="wpsp_required" type="text" name="cust<?php echo $field->id;?>" value="<?php echo stripslashes($ticket->$custom)?>" maxlength="80" style="width: 95%; margin-top: 10px;"/><br><br>
 				<?php
 				break;
 				case '2': ?>
@@ -121,7 +121,7 @@ $ticket=$wpdb->get_row("select * from {$wpdb->prefix}wpsp_ticket where id=".$tic
 				break;
 				case '5': ?>
 					<span class="label label-info" style="font-size: 13px;"><?php echo $field->label;?></span><code>*</code><br/><br/>
-					<textarea class="wpsp_required" id="cust<?php echo $field->id;?>" name="cust<?php echo $field->id;?>"><?php echo $ticket->$custom?></textarea><br/><br/>
+                                        <textarea class="wpsp_required" id="cust<?php echo $field->id;?>" name="cust<?php echo $field->id;?>"><?php echo stripslashes($ticket->$custom);?></textarea><br/><br/>
 				<?php
 				break;
                                 case '6': ?>
@@ -137,7 +137,7 @@ $ticket=$wpdb->get_row("select * from {$wpdb->prefix}wpsp_ticket where id=".$tic
 			switch($field->field_type){
 				case '1': ?>
 					<span class="label label-info" style="font-size: 13px;"><?php echo $field->label;?></span><br>
-					<input type="text" name="cust<?php echo $field->id;?>" value="<?php echo $ticket->$custom?>" maxlength="80" style="width: 95%; margin-top: 10px;"/><br><br>
+                                        <input type="text" name="cust<?php echo $field->id;?>" value="<?php echo stripslashes($ticket->$custom)?>" maxlength="80" style="width: 95%; margin-top: 10px;"/><br><br>
 				<?php 
 				break;
 				case '2':?>
@@ -222,7 +222,7 @@ $ticket=$wpdb->get_row("select * from {$wpdb->prefix}wpsp_ticket where id=".$tic
 				break;
 				case '5': ?>
 					<span class="label label-info" style="font-size: 13px;"><?php echo $field->label;?></span><br/><br/>
-					<textarea id="cust<?php echo $field->id;?>" name="cust<?php echo $field->id;?>"><?php echo $ticket->$custom?></textarea><br/><br/>
+					<textarea id="cust<?php echo $field->id;?>" name="cust<?php echo $field->id;?>"><?php echo stripslashes(htmlspecialchars_decode($ticket->$custom))?></textarea><br/><br/>
 				<?php
 				break;
                                 case '6': ?>
@@ -239,7 +239,7 @@ $ticket=$wpdb->get_row("select * from {$wpdb->prefix}wpsp_ticket where id=".$tic
         <input type="hidden" name="action" value="setEditCustomField">
         <input type="hidden" name="ticket_id" value="<?php echo $ticket_id;?>">
         <input type="hidden" name="wpsp_nonce" value="<?php echo wp_create_nonce($ticket_id);?>">
-        <input type="submit" id="wpsp_submit" class="btn btn-success" value="<?php _e($advancedSettings['ticket_label_alice'][7],'wp-support-plus-responsive');?>">
+        <input type="submit" id="wpsp_submit" class="btn btn-success" value="<?php _e($advancedSettings['ticket_label_alice'][7],'wp-support-plus-responsive-ticket-system');?>">
 </form>
 <script>
 jQuery(document).ready(function() {

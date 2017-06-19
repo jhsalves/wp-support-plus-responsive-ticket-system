@@ -26,6 +26,7 @@ if($roleManage['front_ticket_all'] || count($allowed_roles)>0)
             <?php wp_loginout($_SERVER['REQUEST_URI']); ?>
         </div><br>
     <?php }?>
+        <?php do_action('wpsp_after_frontend_logout_link'); ?>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#" onclick="wpsp_getAllTickets();" id="tab_ticket_container" data-toggle="tab"><?php echo __($advancedSettings['ticket_label_alice'][2], 'wp-support-plus-responsive-ticket-system');?></a></li>
         <?php
@@ -49,7 +50,9 @@ if($roleManage['front_ticket_all'] || count($allowed_roles)>0)
             <?php
         }
         ?>
+            <li><a href="#" onclick="wpsp_getDashboard();" id="tab_ticket_dashboard" data-toggle="tab"><?php echo _e('Dashboard','wp-support-plus-responsive-ticket-system');?></a></li>
     </ul>
+        
     <!-- Tab panes -->
     <div class="tab-content">
         <!-- Tickets Tab Body Start Here -->
@@ -78,5 +81,18 @@ if($roleManage['front_ticket_all'] || count($allowed_roles)>0)
             <div class="wait"><img alt="<?php echo __('Please Wait', 'wp-support-plus-responsive-ticket-system');?>" src="<?php echo WCE_PLUGIN_URL.'asset/images/ajax-loader@2x.gif?ver='.WPSP_VERSION;?>"></div>
         </div>
         <!-- FAQ Tab Body End Here -->
+        <!-- Dashboard Tab Body Start Here -->
+        <div class="tab-pane" id="ticket_dashboard">
+            <div id="ticket_dashboard_container"></div>
+            <div class="wait"><img alt="<?php echo __('Please Wait', 'wp-support-plus-responsive-ticket-system');?>" src="<?php echo WCE_PLUGIN_URL.'asset/images/ajax-loader@2x.gif?ver='.WPSP_VERSION;?>"></div>
+        </div>
+        <!-- Dashboard Tab Body End Here -->
     </div>
 <?php }?>
+<script>
+function wpsp_frontend_dashboard_callback(){
+    <?php
+    do_action('wpsp_frontend_dashboard_callback');
+    ?>
+}
+</script>

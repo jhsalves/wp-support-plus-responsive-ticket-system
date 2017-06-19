@@ -124,7 +124,7 @@ foreach ($customFields as $field){
  * Update 1 - Change Custom Status Color
  * Join custom status database entry
  */
-$sql="select t.id,t.type,t.subject,t.status,c.name as category,c.id as cat_id,t.active,t.assigned_to,t.priority,t.created_by,t.guest_name,t.agent_created,cs.color,cp.color as pcolor,".$customFieldSql."
+$sql="select t.id,t.type,t.subject,t.status,c.name as category,c.id as cat_id,t.active,t.assigned_to,t.priority,t.created_by,t.guest_name,t.agent_created,cs.color,cp.color as pcolor,cp.name as pname,".$customFieldSql."
 		TIMESTAMPDIFF(MONTH,t.update_time,UTC_TIMESTAMP()) as date_modified_month,
 		TIMESTAMPDIFF(DAY,t.update_time,UTC_TIMESTAMP()) as date_modified_day,
 		TIMESTAMPDIFF(HOUR,t.update_time,UTC_TIMESTAMP()) as date_modified_hour,
@@ -188,14 +188,15 @@ if($cu->has_cap('manage_support_plus_ticket') && !$cu->has_cap('manage_support_p
 {
 	$where.=($flagUseWhere)?'AND ':'';
 	$flagUseWhere=true;
-	$where.="( ".$cu->ID." IN (t.assigned_to) OR t.assigned_to='0' OR t.created_by='".$cu->ID."' OR t.ticket_type=1) ";
+	$where.="(t.assigned_to RLIKE '(^|,)".$cu->ID."(,|$)' OR t.assigned_to='0' OR t.created_by='".$cu->ID."' OR t.ticket_type=1) ";
 }
 elseif(isset($_POST['filter_by_assigned_to']))
 {
 	if($_POST['filter_by_assigned_to']!='all'){
 		$where.=($flagUseWhere)?'AND ':'';
 		$flagUseWhere=true;
-		$where.=intval(sanitize_text_field($_POST['filter_by_assigned_to']))." IN (t.assigned_to) ";
+                $userid=intval(sanitize_text_field($_POST['filter_by_assigned_to']));
+                $where.="t.assigned_to RLIKE '(^|,)".$userid."(,|$)'";
 	}
 }
 
@@ -424,7 +425,7 @@ switch($sortby){
 
 if($order=='')
 {
-	$order_by='ORDER BY t.update_time DESC ';
+        $order_by='ORDER BY t.update_time DESC ';
 }
 
 $order_by=apply_filters('wpsp_get_ticket_list_orderby_backend',$order_by,$order,$sortby);
@@ -444,6 +445,9 @@ $findTotalRowsSQL="select count(*) "
 $findTotalRowsSQL=apply_filters('wpsp_get_ticket_list_count_backend_sql',$findTotalRowsSQL);
 
 $totalrows = $wpdb->get_var( $findTotalRowsSQL.$where );
+
+$totalrows=apply_filters('wpsp_get_ticket_list_count_backend',$totalrows,$findTotalRowsSQL,$where);
+
 $current_page= intval(sanitize_text_field($_POST['page_no']))+1;
 $total_pages=ceil($totalrows/intval(sanitize_text_field($_POST['filter_by_no_of_ticket'])));
 /*  
@@ -465,6 +469,7 @@ $tickets = $wpdb->get_results( $sql );
                         ?>
                         <th><input type="checkbox" id="all_selected" name="all_selected" onchange="get_all_checked();" /></th>
                         <?php
+                        do_action('wpsp_after_th_in_getticketsbyfilter');
                     }
                     else{
                         ?>
@@ -631,7 +636,7 @@ $tickets = $wpdb->get_results( $sql );
 							}?></th><?php
 						break;
                                                 default:                                                 
-                                                        do_action('wpsp_add_th_in_ticket_list',$order,$sortby);                                                 
+                                                        do_action('wpsp_add_th_in_ticket_list',$order,$sortby,$backend_ticket_field_key);                                                 
                                                         break;
 					}
 				}
@@ -640,6 +645,7 @@ $tickets = $wpdb->get_results( $sql );
 		?>
 	  </tr>
 	  <?php 
+          do_action('wpsp_before_ticket_list',$_POST['filter_by_status']);
 	  foreach ($tickets as $ticket){
                 
                 $assign_to=array();
@@ -661,44 +667,19 @@ $tickets = $wpdb->get_results( $sql );
 		else if ($ticket->date_modified_min) $modified=$ticket->date_modified_min.' '.__('minutes ago','wp-support-plus-responsive-ticket-system');
 		else $modified=$ticket->date_modified_sec.' '.__('seconds ago','wp-support-plus-responsive-ticket-system');
 		
-		/* BEGIN CLOUGH I.T. SOLUTIONS MODIFICATION
-		 * Update 1 - Change Custom Status Color
-		 * Create style for custom status
-		 */
-		$status_color='';
-		$style = '';
-		switch ($ticket->status){
-			case 'open': 
-				$style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
-				$status_color='danger';
-				break;
-			case 'pending': 
-				$style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
-				$status_color='warning';
-				break;
-			case 'closed': 
-				$style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
-				$status_color='success';
-				break;
-			default :
-				$style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
-				$status_color='info';
-				break;
-		}
-		/* END CLOUGH I.T. SOLUTIONS MODIFICATION
-		*/
+		
 		$priority_color='';
 		switch ($ticket->priority){
 			case 'high': $priority_color=$ticket->pcolor;break;
 			case 'medium': $priority_color=$ticket->pcolor;break;
 			case 'normal': $priority_color=$ticket->pcolor;break;
+                        
 			case 'low': $priority_color=$ticket->pcolor;break;
 			default :
 				$priority_color=$ticket->pcolor;
 				break;
 		}
-		
-		$agent_name='';
+                $agent_name='';
 		if($ticket->assigned_to=='0'){
 			$agent_name="None";
 		}
@@ -720,13 +701,15 @@ $tickets = $wpdb->get_results( $sql );
                 $css='cursor:pointer;';
                 $css=apply_filters('wpsp_ticket_list_tr_style_backend',$css,$ticket);
 		$disabled=apply_filters('wpsp_disable_ticket_list_checkbox_backend','',$ticket,$cu);
-		echo "<tr style='".$css."'  onclick='if(link)openTicket(".$ticket->id.");'>";
+                echo "<tr style='".$css."'  onclick='if(link)openTicket(".$ticket->id.");'>"; 
                 if($_POST['filter_by_status'] != 'deleted'){
                     echo "<td onmouseover='link=false;' onmouseout='link=true;'><input id='".$ticket->id."' type='checkbox' class='bulk_action_checkbox' onchange='wpspCheckBulkActionVisibility();' name='selected[]' value='".$ticket->id."' ".$disabled."/></td>";
                 }else{
                     echo '<td><img alt="imgdel" src='. WCE_PLUGIN_URL . 'asset/images/trash.png> </td>';
                 }
-		foreach($advancedSettingsTicketList['backend_ticket_list'] as $backend_ticket_field_key => $backend_ticket_field_value){
+                do_action('wpsp_after_checkbox_td_in_getticketsbyfilter',$ticket);
+                
+                foreach($advancedSettingsTicketList['backend_ticket_list'] as $backend_ticket_field_key => $backend_ticket_field_value){
 				if($backend_ticket_field_value==1){
 						if(is_numeric($backend_ticket_field_key)){
 							$customFields = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpsp_custom_fields WHERE id='".$backend_ticket_field_key."'" );
@@ -741,7 +724,28 @@ $tickets = $wpdb->get_results( $sql );
 						switch($backend_ticket_field_key){
 							case 'id': echo "<td>".__($ticket->id,'wp-support-plus-responsive-ticket-system')." </td>";
 							break;
-							case 'st': echo "<td><span class='label label-".$status_color."' style='font-size: 13px;".$style."'>".__(ucfirst($ticket->status),'wp-support-plus-responsive-ticket-system')."<span></td>";
+							case 'st': 
+                                                            $status_color='';
+                                                            $style = '';
+                                                            switch ($ticket->status){
+                                                                    case 'open': 
+                                                                            $style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
+                                                                            $status_color='danger';
+                                                                            break;
+                                                                    case 'pending': 
+                                                                            $style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
+                                                                            $status_color='warning';
+                                                                            break;
+                                                                    case 'closed': 
+                                                                            $style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
+                                                                            $status_color='success';
+                                                                            break;
+                                                                    default :
+                                                                            $style = ( $ticket->color != NULL && $ticket->color != '' ) ? ' background-color:' . $ticket->color . ' !important;' : '';
+                                                                            $status_color='info';
+                                                                            break;
+                                                            }
+                                                            echo "<td><span class='label label-".$status_color."' style='font-size: 13px;".$style."'>".__(ucfirst($ticket->status),'wp-support-plus-responsive-ticket-system')."<span></td>";
 							break;
 							case 'sb':$str_dots=""; 
 								if(strlen(stripcslashes(htmlspecialchars_decode($ticket->subject,ENT_QUOTES))) > $subCharLength['backend'])
@@ -758,7 +762,7 @@ $tickets = $wpdb->get_results( $sql );
 							break;
 							case 'at': echo "<td>".__($agent_name,'wp-support-plus-responsive-ticket-system')."</td>";
 							break;
-							case 'pt': echo "<td><span class='label label-".$priority_color."' style='font-size: 13px;background-color:".$priority_color."'>".__(ucfirst($ticket->priority),'wp-support-plus-responsive-ticket-system')."</span></td>";
+							case 'pt': echo "<td><span class='label label-".$priority_color."' style='font-size: 13px;background-color:".$priority_color."'>".__(($ticket->pname),'wp-support-plus-responsive-ticket-system')."</span></td>";
 							break;
 							case 'ut': echo "<td>".__($modified,'wp-support-plus-responsive-ticket-system')."</td>";
 							break;
@@ -787,7 +791,7 @@ $tickets = $wpdb->get_results( $sql );
                                                         case 'acd': echo "<td>".__($agent_created,'wp-support-plus-responsive-ticket-system')."</td>";
 							break;
                                                         default:                                                         
-                                                                do_action('wpsp_add_td_in_ticket_list',$ticket);                                                         
+                                                                do_action('wpsp_add_td_in_ticket_list',$ticket,$backend_ticket_field_key);                                                         
                                                                 break;
 						}
 					}
